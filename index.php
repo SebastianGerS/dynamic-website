@@ -8,15 +8,27 @@
         <title>05-dynamisk-webbplats-php-SebastianGerS</title>
     </head>
     <header>
-        <nav>
-            <ul>
-                <li>Lorem</li>
-                <li>ipsum</li>
-                <li>dolor</li>
-                <li>amet</li>
-                <li>sea</li>
-            </ul>
-        </nav>
+        <div id="logo">
+        <img src="#" alt="logo">
+        </div>
+        <div id="center-header">
+        <h1>Välkommen till bloggen!</h1>
+        <form id=search-form>
+            <input type=text placeholder="type your search">
+            <div id="hashtags">
+            <button>#programmering</button>
+            <button>#musik</button>
+            <button>#Tv-serier</button>
+            </div>
+        </form>
+        </div>
+        <div id="login-form">
+            <form>
+                <label>Logga in</label>
+                <input type="text" placeholder="Användarnamn">
+                <input type="text" placeholder="Lösenord">
+            </form>
+        <div>
     </header>
     <body>
         <section>      
@@ -25,6 +37,11 @@
                 <p>Lorem ipsum dolor sit amet, an sea quot timeam. Habemus invenire per no. Alterum oporteat repudiare quo eu. Mea graeci aeterno et. Id facer augue quo, pri ei everti meliore.
                         Ea discere euismod elaboraret qui, sed omnis semper qualisque ad, cum maiestatis definiebas ea. Ut verear petentium mel. Persius epicurei expetenda ei eum, veri quaestio suavitate per te, sit ut iudicabit percipitur. Quod constituam interpretaris ei mei, sed verterem gubergren consequuntur te, tota constituto te qui.</p>
             </article>
+            <nav>
+                <button>skapa inlägg</button>
+                <button>Editera inlägg</button>
+                <button>tabort inlägg</button>
+            </nav>
         </section>
         <section>   
             <article>
@@ -32,7 +49,11 @@
                 <p>Lorem ipsum dolor sit amet, an sea quot timeam. Habemus invenire per no. Alterum oporteat repudiare quo eu. Mea graeci aeterno et. Id facer augue quo, pri ei everti meliore.
                     Ea discere euismod elaboraret qui, sed omnis semper qualisque ad, cum maiestatis definiebas ea. Ut verear petentium mel. Persius epicurei expetenda ei eum, veri quaestio suavitate per te, sit ut iudicabit percipitur. Quod constituam interpretaris ei mei, sed verterem gubergren consequuntur te, tota constituto te qui.</p>
             </article>
-            
+            <nav>
+                <button>skapa inlägg</button>
+                <button>Editera inlägg</button>
+                <button>tabort inlägg</button>
+            </nav>
         </section>
         <section>
             <article>
@@ -40,6 +61,11 @@
                 <p>Lorem ipsum dolor sit amet, an sea quot timeam. Habemus invenire per no. Alterum oporteat repudiare quo eu. Mea graeci aeterno et. Id facer augue quo, pri ei everti meliore.
                     Ea discere euismod elaboraret qui, sed omnis semper qualisque ad, cum maiestatis definiebas ea. Ut verear petentium mel. Persius epicurei expetenda ei eum, veri quaestio suavitate per te, sit ut iudicabit percipitur. Quod constituam interpretaris ei mei, sed verterem gubergren consequuntur te, tota constituto te qui.</p>
             </article>
+            <nav>
+                <button>skapa inlägg</button>
+                <button>Editera inlägg</button>
+                <button>tabort inlägg</button>
+            </nav>
         </section>
     </body>
     <footer>

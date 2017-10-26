@@ -23,9 +23,19 @@ header {
     color:cornsilk;
     width:100%;    
     display: flex;
-    margin: 0 auto;
-    flex-direction: column-reverse;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
 
+}
+
+#login-form form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#login-form form input{
+    margin: 0.5em 0;
 }
 
 nav ul{
@@ -38,6 +48,24 @@ nav ul li {
     margin: 1em;
     list-style: none;
 }
+
+#search-form {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom:1em;
+}
+#search-form input {
+    margin-top:1em;
+    margin-bottom: 1em;
+}
+
+#center-header {
+    margin-left:8em;
+}
+
+
 
 body {
     background-color: white;

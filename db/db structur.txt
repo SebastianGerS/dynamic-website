@@ -1,0 +1,46 @@
+Tabeller:
+CREATE TABLE users (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    firstname VARCHAR NOT NULL,
+    lastname VARCHAR NOT NULL,
+    email VARCHAR NOT NULL,
+    username VARCHAR NOT NULL,
+    password VARCHAR NOT NULL,
+    type ENUM (admin, user),
+    );
+
+CREATE TABLE blogposts_info (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    post_name VARCHAR NOT NULL,
+    post_time DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+);
+
+CREATE TABLE blogposts_content (
+    id INT UNSIGNED NOT NULL,
+    content VARCHAR(8000) NOT NULL,
+    FOREIGN KEY (id) REFERENCES blogpost_info(id),
+);
+
+CREATE TABLE blogposts_comments (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    post_id INT UNSIGNED NOT NULL,
+    content VARCHAR(4000) NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
+    post_time DATETIME NOT NULL,
+    FOREIGN KEY (post_id) REFERENCES blogpost_info(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+);
+
+CREATE TABLE tags(
+    id INT UNSIGNED AUTO_INCREMENT,
+    tagname VARCHAR NOT NULL,
+);
+
+CREATE TABLE post_tag_correspondens (
+    post_id INT UNSIGNED,
+    tag_id INT UNSIGNED,
+    FOREIGN KEY (post_id) REFERENCES blogpost_info(id),
+    FOREIGN KEY (tag_id) REFERENCES tags(id),
+);

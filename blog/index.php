@@ -1,3 +1,207 @@
+<?php
+use Blog\Utils\Connection;
+
+function autoloader($classname)
+{
+    $lastSlash = strpos($classname,'\\') +1;
+    $classname = substr($classname, $lastSlash);
+    $directory = str_replace('\\', '/', $classname);
+    $filename = __DIR__ . '/src/' . $directory . '.php';
+    require_once($filename);
+}
+
+spl_autoload_register('autoloader');
+//require_once( __DIR__ . '/src/Functions/Userfunc.php');
+
+function addUser (
+    string $firstname,
+    string $surename,
+    string $email, 
+    string $username,
+    string $password,
+    string $type = "user") {
+
+    $db = Connection::getInstance();
+    $db->handler->beginTransaction();
+    try {
+        $query = 'INSERT INTO users(firstname, surename, email, username, password, type) VALUES (:firstname, :surename, :email, :username, :password, :type)';
+        $statement = $db->handler->prepare($query);
+        $statement->bindValue("firstname",$firstname);
+        $statement->bindValue("surename",$surename);
+        $statement->bindValue("email",$email);
+        $statement->bindValue("username",$username);
+        $statement->bindValue("password",$password);
+        $statement->bindValue("type",$type);
+        if(!$statement->execute()) 
+        {
+            throw new Exception($statement->errorinfo()[2]);
+        }
+        $db->handler->commit();
+    } catch (Exception $e) {
+        $db->handler->rollBack();
+        throw $e;
+    }
+}
+
+/*try {
+addUser("sven", "svensson", "exempel@exempel.exempel", "Sven", "root", "user");
+} catch (Exception $e) {
+    echo "error adding user" . $e->getMessage();
+}*/
+
+function editUserType(string $username, string $type) 
+{
+    $db = Connection::getInstance();
+    $db->handler->beginTransaction();
+    try {
+    $query = 'UPDATE users SET type = :type WHERE username = :username';
+    $statement = $db->handler->prepare($query);
+    $statement->bindValue("username", $username);
+    $statement->bindValue("type", $type);
+    if(!$statement->execute()) 
+    {
+        throw new Exception($statement->errorinfo()[2]);
+    }
+    $db->handler->commit();
+    } catch (Exception $e) {
+        $db->handler->rollBack();
+        throw $e;
+    }
+}
+
+/*try {
+editUserType("Sven", "user");
+} catch (Exception $e) {
+    echo "error changing type" . $e->getMessage();
+}*/
+
+
+function newBlogPost(int $userId, string $postName, string $content, array $tags)
+{
+    $db = Connection::getInstance();
+    $db->handler->beginTransaction();
+    try {
+        $query = 'INSERT INTO blogposts_info(user_id, post_name, post_time) VALUES(:user_id, :post_name, NOW())';
+        $statement = $db->handler->prepare($query);
+        $statement->bindValue("user_id", $userId);
+        $statement->bindValue("post_name", $postName);
+        if(!$statement->execute()) 
+        {
+            throw new Exception($statement->errorinfo()[2]);
+        }
+        $postId = $db->handler->lastInsertId("blogposts_info");
+        settype($postId,"integer");
+        echo $postId;
+        $query = 'INSERT INTO blogposts_content(id, content) VALUES (:id , :content)';
+        $statement = $db->handler->prepare($query);
+        $statement->bindValue("id", $postId);
+        $statement->bindValue("content", $content);
+        if(!$statement->execute()) 
+        {
+            throw new Exception($statement->errorinfo()[2]);
+        }
+        $query = 'SELECT tagname FROM tags';
+        $statement = $db->handler->prepare($query);
+        $statement->execute();
+        $curentTags = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+        
+        foreach($tags as $tag) 
+        {
+            if (array_search($tag, $curentTags) !== false) 
+            {
+                $query = 'INSERT INTO tags(tagname) VALUES (:tagname)';
+                $statement = $db->handler->prepare($query);
+                $statement->bindValue("tagname", $tag);
+                if(!$statement->execute()) 
+                {
+                    throw new Exception($statement->errorinfo()[2]);
+                }
+            }
+        }
+
+        $query = 'SELECT id FROM tags WHERE tagname =:tagname';
+        $statement = $db->handler->prepare($query);
+        foreach($tags as $tag) {
+            
+            $statement->bindValue("tagname", $tag);
+            if(!$statement->execute()) 
+            {
+                throw new Exception($statement->errorinfo()[2]);
+            }
+            $statement->execute();
+            $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
+            settype($tagId,"integer");
+            $query = 'INSERT INTO post_tag_correspondens(post_id, tag_id) VALUES (:post_id, :tag_id)';
+            $statement->bindValue("post_id", $postId);
+            $statement->bindValue("tag_id", $tagId);
+            if(!$statement->execute()) 
+            {
+                echo "det är här det blir fel... men varför?";
+                throw new Exception($statement->errorinfo()[2]);
+                
+            }
+        }
+        $db->handler->commit();
+    } catch (Exception $e) {
+        $db->handler->rollBack();
+        throw $e;
+    }
+
+}
+try {
+newBlogPost(1, "Mitt första blogg inlägg", "Hej hej det här är mitt första blog inlägg,
+ jag hoppas att det ska fungera och att mina tabeller kommer att uppdateras som de ska. Tack för mej. Hej Hej.", ["#first", "#test", "#tabeller"]);
+} catch (Exception $e) {
+    echo "error changing type" . $e->getMessage();
+}
+
+
+
+/*$db = Connection::getInstance();
+$tag ="green";
+$query = 'SELECT id FROM tags WHERE tagname =:tagname';
+$statement = $db->handler->prepare($query);
+$statement->bindValue("tagname", $tag);
+if(!$statement->execute()) 
+{
+    throw new Exception($statement->errorinfo()[2]);
+}
+$statement->execute();
+$tagId = $statement->fetch(PDO::FETCH_NUM)[0];
+echo $tagid;
+$tag2 ="blue";
+$query = 'SELECT id FROM tags WHERE tagname=:tagname';
+$statement = $db->handler->prepare($query);
+$statement->bindValue("tagname", $tag2);
+$statement->execute();
+
+
+$ids = $statement->fetch(PDO::FETCH_NUM)[0];
+echo $ids;
+
+
+/*$query = 'SELECT tagname FROM tags';
+$statement = $db->handler->prepare($query);
+$statement->execute();
+$curentTags = $statement->fetchAll(PDO::FETCH_ASSOC);
+$newtag = yellow;
+foreach ($curentTags as $tag) {
+    print_r($tag);
+    if (!array_search($newtag, $curentTags)) {
+    echo "its not in here here";
+    array_push($curentTags, $newtag);
+    } else {
+    echo "it's here";
+    print_r($curentTags); 
+    }
+}*/
+
+//$statement->execute();
+//var_dump($statement);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>

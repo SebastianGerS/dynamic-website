@@ -88,10 +88,12 @@ function newBlogPost(int $userId, string $postName, string $content, array $tags
         if(!$statement->execute()) 
         {
             throw new Exception($statement->errorinfo()[2]);
-        }
+        }//detta fungerar
+
+
         $postId = $db->handler->lastInsertId("blogposts_info");
-        settype($postId,"integer");
-        echo $postId;
+        //settype($postId,"integer");
+        //echo $postId;
         $query = 'INSERT INTO blogposts_content(id, content) VALUES (:id , :content)';
         $statement = $db->handler->prepare($query);
         $statement->bindValue("id", $postId);
@@ -99,16 +101,23 @@ function newBlogPost(int $userId, string $postName, string $content, array $tags
         if(!$statement->execute()) 
         {
             throw new Exception($statement->errorinfo()[2]);
-        }
+        } // detta fungerar
+
         $query = 'SELECT tagname FROM tags';
         $statement = $db->handler->prepare($query);
         $statement->execute();
-        $curentTags = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
-        
+        $taglists = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach($tags as $tag) 
         {
-            if (array_search($tag, $curentTags) !== false) 
+            $toAdd = true;
+            foreach($taglists as $curentTags)
+            {
+                if ($tag == $curentTags[tagname]) 
+                {
+                  $toAdd = false;  
+                }
+            } 
+            if($toAdd)
             {
                 $query = 'INSERT INTO tags(tagname) VALUES (:tagname)';
                 $statement = $db->handler->prepare($query);
@@ -120,10 +129,10 @@ function newBlogPost(int $userId, string $postName, string $content, array $tags
             }
         }
 
-        $query = 'SELECT id FROM tags WHERE tagname =:tagname';
-        $statement = $db->handler->prepare($query);
-        foreach($tags as $tag) {
-            
+        
+       foreach($tags as $tag) {
+            $query = 'SELECT id FROM tags WHERE tagname =:tagname';
+            $statement = $db->handler->prepare($query);
             $statement->bindValue("tagname", $tag);
             if(!$statement->execute()) 
             {
@@ -131,14 +140,15 @@ function newBlogPost(int $userId, string $postName, string $content, array $tags
             }
             $statement->execute();
             $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
-            settype($tagId,"integer");
             $query = 'INSERT INTO post_tag_correspondens(post_id, tag_id) VALUES (:post_id, :tag_id)';
+            $statement = $db->handler->prepare($query);
             $statement->bindValue("post_id", $postId);
             $statement->bindValue("tag_id", $tagId);
             if(!$statement->execute()) 
             {
                 echo "det är här det blir fel... men varför?";
-                throw new Exception($statement->errorinfo()[2]);
+                echo $statement->errorCode();
+                throw new Exception($statement->errorInfo()[2]);
                 
             }
         }
@@ -149,12 +159,14 @@ function newBlogPost(int $userId, string $postName, string $content, array $tags
     }
 
 }
-try {
+
+
+/*try {
 newBlogPost(1, "Mitt första blogg inlägg", "Hej hej det här är mitt första blog inlägg,
- jag hoppas att det ska fungera och att mina tabeller kommer att uppdateras som de ska. Tack för mej. Hej Hej.", ["#first", "#test", "#tabeller"]);
+ jag hoppas att det ska fungera och att mina tabeller kommer att uppdateras som de ska. Tack för mej. Hej Hej.", ["#i3", "#t", "#ber"]);
 } catch (Exception $e) {
     echo "error changing type" . $e->getMessage();
-}
+}*/
 
 
 
@@ -169,7 +181,8 @@ if(!$statement->execute())
 }
 $statement->execute();
 $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
-echo $tagid;
+
+echo $tagId;
 $tag2 ="blue";
 $query = 'SELECT id FROM tags WHERE tagname=:tagname';
 $statement = $db->handler->prepare($query);
@@ -177,8 +190,8 @@ $statement->bindValue("tagname", $tag2);
 $statement->execute();
 
 
-$ids = $statement->fetch(PDO::FETCH_NUM)[0];
-echo $ids;
+$id = $statement->fetch(PDO::FETCH_NUM)[0];
+echo $id;
 
 
 /*$query = 'SELECT tagname FROM tags';
@@ -208,7 +221,7 @@ foreach ($curentTags as $tag) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel ="stylesheet" type="text/css" href="main.css">
+        <link rel ="stylesheet" type="text/css" href="css/main.css">
         <title>05-dynamisk-webbplats-php-SebastianGerS</title>
     </head>
     <header>

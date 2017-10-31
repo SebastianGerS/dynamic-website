@@ -1,5 +1,7 @@
 <?php
 use Blog\Utils\Connection;
+use Blog\Models\BlogpostModel;
+use BLog\Models\UserModel;
 
 function autoloader($classname)
 {
@@ -11,8 +13,8 @@ function autoloader($classname)
 }
 
 spl_autoload_register('autoloader');
-require_once( __DIR__ . '/src/Functions/userFunctions.php');
-require_once( __DIR__ . '/src/Functions/blogpostFunctions.php');
+//require_once( __DIR__ . '/src/Functions/userFunctions.php');
+//require_once( __DIR__ . '/src/Functions/blogpostFunctions.php');
 
 /*try {
 addUser("sven", "svensson", "exempel@exempel.exempel", "Sven", "root", "user");
@@ -22,64 +24,25 @@ addUser("sven", "svensson", "exempel@exempel.exempel", "Sven", "root", "user");
 
 
 
+
+$userModel = new UserModel();
+
 /*try {
-editUserType("Sven", "user");
+    $blogpostmaker->insertBlogPostToDb(2, "Mitt första blogg inlägg", "Hej hej det här är mitt första blog inlägg,
+ jag hoppas att det ska fungera och att mina tabeller kommer att uppdateras som de ska. Tack för mej. Hej Hej.", ["#hejhej", "#t", "#ber"]);
 } catch (Exception $e) {
     echo "error changing type" . $e->getMessage();
 }*/
-
 try {
-newBlogPost(2, "Mitt första blogg inlägg", "Hej hej det här är mitt första blog inlägg,
- jag hoppas att det ska fungera och att mina tabeller kommer att uppdateras som de ska. Tack för mej. Hej Hej.", ["#i3", "#t", "#ber"]);
-} catch (Exception $e) {
-    echo "error changing type" . $e->getMessage();
-}
-
-
-
-/*$db = Connection::getInstance();
-$tag ="green";
-$query = 'SELECT id FROM tags WHERE tagname =:tagname';
-$statement = $db->handler->prepare($query);
-$statement->bindValue("tagname", $tag);
-if(!$statement->execute()) 
-{
-    throw new Exception($statement->errorinfo()[2]);
-}
-$statement->execute();
-$tagId = $statement->fetch(PDO::FETCH_NUM)[0];
-
-echo $tagId;
-$tag2 ="blue";
-$query = 'SELECT id FROM tags WHERE tagname=:tagname';
-$statement = $db->handler->prepare($query);
-$statement->bindValue("tagname", $tag2);
-$statement->execute();
-
-
-$id = $statement->fetch(PDO::FETCH_NUM)[0];
-echo $id;
-
-
-/*$query = 'SELECT tagname FROM tags';
-$statement = $db->handler->prepare($query);
-$statement->execute();
-$curentTags = $statement->fetchAll(PDO::FETCH_ASSOC);
-$newtag = yellow;
-foreach ($curentTags as $tag) {
-    print_r($tag);
-    if (!array_search($newtag, $curentTags)) {
-    echo "its not in here here";
-    array_push($curentTags, $newtag);
-    } else {
-    echo "it's here";
-    print_r($curentTags); 
+    $userModel->addUser("sven", "svensson", "exeml@exempel.exempel", "Sen", "root");
+    } catch (Exception $e) {
+        echo "error adding user" . $e->getMessage();
     }
-}*/
-
-//$statement->execute();
-//var_dump($statement);
-
+try {
+    $userModel->editUserType("Sven", "user");
+    } catch (Exception $e) {
+        echo "error changing type" . $e->getMessage();
+    }
 ?>
 
 <!DOCTYPE html>

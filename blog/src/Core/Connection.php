@@ -1,10 +1,10 @@
 <?php
 
-namespace Blog\Utils;
+namespace Blog\Core;
 
 use \PDO;
 use Blog\Utils\Singelton;
-use Blog\Utils\Config;
+use Blog\Core\Config;
 
 class Connection extends Singelton 
 {

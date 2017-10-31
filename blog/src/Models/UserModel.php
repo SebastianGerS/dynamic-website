@@ -60,6 +60,17 @@ class UserModel extends AbstractModel
         }
     }
     
+    public function get(int $userId): UserFactory
+    {
+        $query = 'SELECT * FROM users WHERE id = :id';
+        $statement = $this->db->prepare($query);
+        $statement->execute(['id' = $customerId]);
+        $users = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
+        if(empty($users)) {
+            throw new NotFoundException();
+        }
+        return $users[0];
+    }
 
 }
 

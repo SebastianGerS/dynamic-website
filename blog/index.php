@@ -1,7 +1,7 @@
 <?php
-use Blog\Utils\Connection;
+use Blog\Core\Connection;
 use Blog\Models\BlogpostModel;
-use BLog\Models\UserModel;
+use Blog\Models\UserModel;
 
 function autoloader($classname)
 {
@@ -25,7 +25,7 @@ addUser("sven", "svensson", "exempel@exempel.exempel", "Sven", "root", "user");
 
 
 
-$userModel = new UserModel();
+//$userModel = new UserModel();
 
 /*try {
     $blogpostmaker->insertBlogPostToDb(2, "Mitt första blogg inlägg", "Hej hej det här är mitt första blog inlägg,
@@ -33,7 +33,7 @@ $userModel = new UserModel();
 } catch (Exception $e) {
     echo "error changing type" . $e->getMessage();
 }*/
-try {
+/*try {
     $userModel->addUser("sven", "svensson", "exeml@exempel.exempel", "Sen", "root");
     } catch (Exception $e) {
         echo "error adding user" . $e->getMessage();
@@ -42,7 +42,7 @@ try {
     $userModel->editUserType("Sven", "user");
     } catch (Exception $e) {
         echo "error changing type" . $e->getMessage();
-    }
+    }*/
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +51,7 @@ try {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel ="stylesheet" type="text/css" href="css/main.css">
+        <link rel ="stylesheet" type="text/css" href="main.css">
         <title>05-dynamisk-webbplats-php-SebastianGerS</title>
     </head>
     <header>
@@ -70,10 +70,11 @@ try {
         </form>
         </div>
         <div id="login-form">
+            <a href="src/View/CreateUserPage.php">skapa användare</a>
             <form>
-                <label>Logga in</label>
                 <input type="text" placeholder="Användarnamn">
                 <input type="text" placeholder="Lösenord">
+                <button type="submit">Logga in</button>
             </form>
         <div>
     </header>

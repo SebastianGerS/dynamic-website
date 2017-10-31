@@ -37,6 +37,12 @@ header {
 #login-form form input{
     margin: 0.5em 0;
 }
+#login-form a {
+    color: blue;
+    font-size: 1em;
+    text-decoration: underline;
+    padding-left:2em;
+}
 
 nav ul{
     display: flex;

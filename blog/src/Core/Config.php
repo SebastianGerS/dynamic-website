@@ -1,6 +1,6 @@
 <?php
 
-namespace Blog\Utils;
+namespace Blog\Core;
 
 use Blog\Utils\Singelton; 
 

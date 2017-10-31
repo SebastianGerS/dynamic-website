@@ -1,0 +1,33 @@
+{
+    "start": {
+        "controller": "Default",
+        "method": "start"
+    },
+
+    "blogposts/:page": {
+        "controller": "Blogposts",
+        "method": "getAllWithPage",
+        "params": {
+            "page": "number"
+        }
+    },
+
+    "blogposts": {
+        "controller": "Blogposts",
+        "method": "getAll"
+    },
+
+    "blogposts/:id": {
+        "controller": "Blogposts",
+        "method": "get",
+        "params": {
+            "id": "number"
+        }
+    },
+
+    "blogposts/search": {
+        "controller": "Blogposts",
+        "method": "search"
+    },
+
+}

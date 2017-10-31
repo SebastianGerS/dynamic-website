@@ -100,5 +100,14 @@ class BlogpostModel extends AbstractModel
             }
         }
     }
+
+    public function getBlogPosts () {
+        $query = 'SELECT bi.user_id, bi.post_time bi.post_name, bc.content FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id ';
+        $statement = $this->db->prepare($query);
+        if 
+        $statement->execute();
+        $result = $statement->fetchAll();
+        return $result
+    }
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 namespace Blog\Models;
-use Blog\Utils\Connection;
+use Blog\Core\Connection;
 
 
 abstract class AbstractModel 

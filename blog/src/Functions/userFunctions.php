@@ -1,5 +1,7 @@
 <?php 
 
+use Blog\Utils\Connection;
+
 function addUser (
     string $firstname,
     string $surename,
@@ -24,6 +26,26 @@ function addUser (
             throw new Exception($statement->errorinfo()[2]);
         }
         $db->handler->commit();
+    } catch (Exception $e) {
+        $db->handler->rollBack();
+        throw $e;
+    }
+}
+
+function editUserType(string $username, string $type) 
+{
+    $db = Connection::getInstance();
+    $db->handler->beginTransaction();
+    try {
+    $query = 'UPDATE users SET type = :type WHERE username = :username';
+    $statement = $db->handler->prepare($query);
+    $statement->bindValue("username", $username);
+    $statement->bindValue("type", $type);
+    if(!$statement->execute()) 
+    {
+        throw new Exception($statement->errorinfo()[2]);
+    }
+    $db->handler->commit();
     } catch (Exception $e) {
         $db->handler->rollBack();
         throw $e;

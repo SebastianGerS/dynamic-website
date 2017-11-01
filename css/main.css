@@ -87,6 +87,7 @@ body section {
     padding-left:1em;
 }
 
+
 body section article {
     border: 0.2em solid black;
     box-shadow: 0 0.45em 0.45em rgba(0, 0, 0, 0.3);
@@ -102,6 +103,30 @@ body section article p {
     padding: 0 0.3em 0.3em 0.3em;
 
   }
+
+  #create-user-form {
+      width: 50%;
+      margin: 0 auto;
+  }
+
+body section article form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 10em;
+}
+body section article form input {
+    width: 75%;
+    margin: 0 auto;
+    border: 0.1em solid black;
+    box-shadow: 0 0.45em 0.45em rgba(0, 0, 0, 0.3);
+}
+body section article form button {
+    width: 75%;
+    margin: 0 auto;
+    border: 0.1em solid black;
+    box-shadow: 0 0.45em 0.45em rgba(0, 0, 0, 0.3);
+}
 
 footer {
     padding: 1em;

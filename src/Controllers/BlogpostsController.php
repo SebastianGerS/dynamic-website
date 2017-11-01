@@ -5,17 +5,24 @@ use Blog\Models\BlogpostModel;
 
 class BlogpostsController extends AbstractController 
 {
-    public function getAllBlogposts():string
+
+    const PAGE_LENGTH = 5;
+
+    public function getAllWithPage($page):string
     {   
-       
-        $blogpostModel = new BlogpostModel();
+       $page = (int)$page;
+       $blogpostModel = new BlogpostModel();
         
-        $blogposts = $blogpostModel->getAllBlogposts();
+        $blogposts = $blogpostModel->getAllBlogposts($page, self::PAGE_LENGTH);
        
         $properties = [
             'blogposts' => $blogposts
         ];
 
         return $this->render('views/blogposts.php', $properties);
+    }
+    public function getAll():string
+    {   
+        return $this->getAllWithPage(1);
     }
 }

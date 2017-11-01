@@ -18,8 +18,9 @@ spl_autoload_register('autoloader');
 $router = new Router();
 
 $response = $router->route(new Request());
-
+include_once("templates/header.html");
 echo $response;
+include_once("templates/footer.html");
 
 
 

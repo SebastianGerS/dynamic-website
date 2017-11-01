@@ -105,16 +105,20 @@ class BlogpostModel extends AbstractModel
         }
     }
 
-    public function getAllBlogposts() {
+    public function getAllBlogposts(int $page, int $pageLength):array {
+        $start = $pageLength * ($page -1);
         
-        $query = 'SELECT bi.id, bi.user_id, bi.post_time, bi.post_name, bc.content FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id';
-        
+        $query = 'SELECT bi.id, bi.user_id, bi.post_time, bi.post_name, bc.content FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LIMIT :page,:length';
         $statement = $this->db->prepare($query);
-        
+       
+        $statement->bindParam('page', $start, PDO::PARAM_INT);
+        $statement->bindParam('length', $pageLength, PDO::PARAM_INT);
         $statement->execute();
+       
        
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
         return $result;
     }
+
 }
 ?>

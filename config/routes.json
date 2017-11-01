@@ -1,7 +1,15 @@
-{
+{   
+    "": {
+        "controller": "Default",
+        "method": "start"
+    },
     "start": {
         "controller": "Default",
         "method": "start"
+    },
+    "createUser": {
+        "controller":"Default",
+        "method": "createUserPage"
     },
     "blogposts/:page": {
         "controller": "Blogposts",
@@ -12,9 +20,9 @@
     },
     "blogposts": {
         "controller": "Blogposts",
-        "method": "getAllBlogposts"
+        "method": "getAll"
     },
-    "blogposts/:id": {
+    "blogpost/:id": {
         "controller": "Blogposts",
         "method": "get",
         "params": {

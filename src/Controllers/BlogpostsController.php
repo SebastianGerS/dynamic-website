@@ -21,6 +21,7 @@ class BlogpostsController extends AbstractController
 
         return $this->render('views/blogposts.php', $properties);
     }
+    
     public function getAll():string
     {   
         return $this->getAllWithPage(1);

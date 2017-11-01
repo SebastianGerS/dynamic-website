@@ -91,12 +91,14 @@ body section {
 body section article {
     border: 0.2em solid black;
     box-shadow: 0 0.45em 0.45em rgba(0, 0, 0, 0.3);
+    margin: 2em 0;
 }
 
 body section article h1 {
   text-align: center;
   padding-top:0.3em;
   padding-bottom: 1em;
+  color:black;
 }
 body section article p {
    

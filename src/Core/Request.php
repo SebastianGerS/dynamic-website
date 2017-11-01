@@ -1,6 +1,6 @@
 <?php
 
-namespace Bookstore\Core;
+namespace Blog\Core;
 
 class Request {
 
@@ -15,8 +15,8 @@ class Request {
     private $cookies;
 
     public function __construct() {
-        $this->domain = $SERVER['HTTP_HOST'];
-        $this->path = explode('?', $_SERVER['REQUEST_URL'][0]);
+        $this->domain = $_SERVER['HTTP_HOST'];
+        $this->path = explode('?', $_SERVER['REQUEST_URI'])[0];
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->params = new filterdMap(array_merge($_POST, $_GET));
         $this->cookies = new FilterdMap($_COOKIE);

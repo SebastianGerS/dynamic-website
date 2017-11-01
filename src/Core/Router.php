@@ -2,6 +2,8 @@
 
 namespace Blog\Core;
 
+use Blog\Controllers\BlogpostsController;
+
 class Router 
 {
     private $routeMap;
@@ -12,17 +14,21 @@ class Router
 
     public function __construct() {
         $json = file_get_contents(__DIR__ . '/../../config/routes.json');
-        $this->routeMap = json_decoder($json, true);
+        $this->routeMap = json_decode($json, true);
+        
     }
 
     public function route(Request $request): string 
     {
         $path = $request->getPath();
+        
         foreach($this->routeMap as $route => $info) {
             $regexRoute = $this->getRegexRoute($route, $info);
-            if (preg_math("@^/$regexRoute$@", $path)) {
-                return $this->executeController($route, $peth, $info, $request);
+           
+            if (preg_match("@^/$regexRoute$@", $path)) {
+                return $this->executeController($route, $path, $info, $request);
             }
+           
         }
         $errorController = new ErrorController($request);
         return $errorController->notFound();
@@ -31,8 +37,7 @@ class Router
     private function getRegexRoute(string $route, array $info): string {
         if (isset($info['params'])) {
             foreach ($info['params'] as $name => $type) {
-                $route = str_replace(':' . $name, self::$regexPatterns[type], $route);
-
+                $route = str_replace(':' . $name, self::$regexPatterns[$type], $route);
             }
         }
         return $route;
@@ -45,7 +50,9 @@ class Router
         Request $request
     ): string {
         $controllerName = '\Blog\Controllers\\' . $info['controller'] . 'Controller';
+        
         $controller = new $controllerName($request);
+       
 
         if (isset($info['login']) && $info ['login']) {
             if ($request->getCookies()->has('user')) {
@@ -56,15 +63,20 @@ class Router
                 return $errorController->login();
             }
         }
+    
+        $params = $this->extractParams($route, $path);
+        
+        return call_user_func_array([$controller, $info['method']], $params);
+        
     }
 
-    private function extractParams(string $rout, string $path): array {
+    private function extractParams(string $route, string $path): array {
         $params = [];
-
-        $pathParts = exlode('/', $path);
+       
+        $pathParts = explode('/', $path);
         $routeParts = explode('/', $route);
-
-        foreach ($routeParts as $key => $routPart) {
+       
+        foreach ($routeParts as $key => $routePart) {
             if (strpos($routePart, ':') === 0) {
                 $name = substr($routePart, 1);
                 $params[$name] = $pathParts[$key+1];

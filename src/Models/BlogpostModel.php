@@ -3,10 +3,14 @@
 namespace Blog\Models;
 
 use PDO;
+use Blog\Domain\Blogpost;
 
 class BlogpostModel extends AbstractModel 
 {
-   public function insertBlogPostToDb(int $userId, string $postName, string $content, array $tags)
+
+    const CLASSNAME = '\Blog\Domain\Blogpost';
+
+    public function insertBlogPostToDb(int $userId, string $postName, string $content, array $tags)
     {
         $this->db->beginTransaction();
     
@@ -101,13 +105,16 @@ class BlogpostModel extends AbstractModel
         }
     }
 
-    public function getBlogPosts () {
-        $query = 'SELECT bi.user_id, bi.post_time bi.post_name, bc.content FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id ';
+    public function getAllBlogposts() {
+        
+        $query = 'SELECT bi.id, bi.user_id, bi.post_time, bi.post_name, bc.content FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id';
+        
         $statement = $this->db->prepare($query);
-        if 
+        
         $statement->execute();
-        $result = $statement->fetchAll();
-        return $result
+       
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
+        return $result;
     }
 }
 ?>

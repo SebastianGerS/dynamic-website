@@ -3,7 +3,6 @@
         "controller": "Default",
         "method": "start"
     },
-
     "blogposts/:page": {
         "controller": "Blogposts",
         "method": "getAllWithPage",
@@ -11,12 +10,10 @@
             "page": "number"
         }
     },
-
     "blogposts": {
         "controller": "Blogposts",
-        "method": "getAll"
+        "method": "getAllBlogposts"
     },
-
     "blogposts/:id": {
         "controller": "Blogposts",
         "method": "get",
@@ -24,10 +21,9 @@
             "id": "number"
         }
     },
-
     "blogposts/search": {
         "controller": "Blogposts",
         "method": "search"
-    },
+    }
 
 }

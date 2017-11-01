@@ -9,8 +9,8 @@ abstract class AbstractController
     protected $view;
     protected $userId;
 
-    public function __construct(request $request)
-    {
+    public function __construct(Request $request)
+    {   
         $this->request = $request;
     }
 

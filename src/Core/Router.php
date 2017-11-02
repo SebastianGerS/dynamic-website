@@ -3,6 +3,7 @@
 namespace Blog\Core;
 
 use Blog\Controllers\BlogpostsController;
+use Blog\Controllers\UserController;
 
 class Router 
 {

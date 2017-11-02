@@ -7,6 +7,10 @@
         "controller": "Default",
         "method": "start"
     },
+    "login": {
+        "controller": "User",
+        "method": "login"
+    },
     "createUser": {
         "controller":"Default",
         "method": "createUserPage"

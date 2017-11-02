@@ -3,9 +3,12 @@ namespace Blog\Models;
 
 use PDO;
 use Blog\Exceptions\UnableToCreateUserException;
+use Blog\Domain\User\UserFactory;
+use Blog\Domain\User;
 
 class UserModel extends AbstractModel 
 {
+    const CLASSNAME = '\Blog\Domain\User\UserFactory';
 
     public function addUser (
         string $firstname,
@@ -60,7 +63,7 @@ class UserModel extends AbstractModel
         }
     }
     
-    public function get(int $userId): UserFactory
+    public function get(int $userId): User
     {
         $query = 'SELECT * FROM users WHERE id = :id';
         $statement = $this->db->prepare($query);
@@ -70,6 +73,31 @@ class UserModel extends AbstractModel
             throw new NotFoundException();
         }
         return $users[0];
+    }
+
+    public function getByUsername(string $username): User
+    {
+        
+        $query = 'SELECT * FROM users WHERE username =:username';
+        $statement = $this->db->prepare($query);
+       
+        $statement->execute(['username' => $username]);
+        $user = $statement->fetch();
+        if(empty($user)) {
+            
+            throw new NotFoundException();
+        }
+       
+        return new User(
+            $user['type'],
+            $user['id'],
+            $user['firstname'],
+            $user['surename'],
+            $user['username'],
+            $user['password'],
+            $user['email']
+
+        );
     }
 
 }

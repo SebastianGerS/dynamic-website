@@ -24,9 +24,9 @@
         </div>
         <div id="login-form">
             <a href="/createUser">skapa användare</a>
-            <form>
-                <input type="text" placeholder="Användarnamn">
-                <input type="text" placeholder="Lösenord">
+            <form action="/login" method="post">
+                <input type="text" name="username" placeholder="Användarnamn">
+                <input type="text" name="password" placeholder="Lösenord">
                 <button type="submit">Logga in</button>
             </form>
         <div>

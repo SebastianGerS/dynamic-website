@@ -64,7 +64,7 @@ class UserModel extends AbstractModel
     {
         $query = 'SELECT * FROM users WHERE id = :id';
         $statement = $this->db->prepare($query);
-        $statement->execute(['id' = $customerId]);
+        $statement->execute(['id' => $userId]);
         $users = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
         if(empty($users)) {
             throw new NotFoundException();

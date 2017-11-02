@@ -24,7 +24,7 @@
     },
     "blogpost/:id": {
         "controller": "Blogposts",
-        "method": "get",
+        "method": "getBlogpost",
         "params": {
             "id": "number"
         }

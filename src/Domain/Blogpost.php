@@ -6,6 +6,7 @@ class Blogpost {
 
     private $id;
     private $user_id;
+    private $username;
     private $post_name;
     private $post_time;
     private $content;
@@ -17,12 +18,15 @@ class Blogpost {
     public function getUserId(): int {
         return $this->user_id;
     }
+    public function getUsername(): string {
+        return $this->username;
+    }
 
     public function getPostName(): string {
         return $this->post_name;
     }
 
-    public function getPostTime(): datetime {
+    public function getPostTime(): string {
         return $this->post_time;
     }
 

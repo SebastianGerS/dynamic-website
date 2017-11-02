@@ -14,7 +14,6 @@ class BlogpostsController extends AbstractController
        $blogpostModel = new BlogpostModel();
         
         $blogposts = $blogpostModel->getAllBlogposts($page, self::PAGE_LENGTH);
-       
         $properties = [
             'blogposts' => $blogposts
         ];
@@ -26,4 +25,16 @@ class BlogpostsController extends AbstractController
     {   
         return $this->getAllWithPage(1);
     }
+
+    public function getBlogpost($id):string
+    {   
+        $blogpostModel = new BlogpostModel();
+        $blogposts = $blogpostModel->getBlogpost($id);
+        $properties = [
+            'blogposts' => $blogposts
+        ];
+
+        return $this->render('views/blogpost.php', $properties);
+    }
+    
 }

@@ -36,6 +36,21 @@
     "blogposts/search": {
         "controller": "Blogposts",
         "method": "search"
+    },
+    "my-blogposts": {
+        "controller": "Blogposts",
+        "method": "getByUser",
+        "login": true
+    },
+    "my-blogposts/:page": {
+        "controller": "Blogposts",
+        "method": "getByUserWithPage",
+        "login": true,
+        "params": {
+            "page": "number"
+        }
+
     }
+    
 
 }

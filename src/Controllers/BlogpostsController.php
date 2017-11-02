@@ -36,5 +36,19 @@ class BlogpostsController extends AbstractController
 
         return $this->render('views/blogpost.php', $properties);
     }
-    
+
+    public function getByUserWithPage($page): string {
+        $page = (int)$page;
+        $blogpostModel = new BlogpostModel();
+        $blogposts = $blogpostModel->getByUser($this->userId, $page, self::PAGE_LENGTH);
+
+        $properties = [
+            'blogposts' => $blogposts
+        ];
+
+        return $this->render('views/blogposts.php', $properties);
+    }
+    public function getByUser(): string {
+        return $this->getByUserWithPage(1);   
+    }
 }

@@ -50,24 +50,27 @@ class Router
         array $info,
         Request $request
     ): string {
+        
         $controllerName = '\Blog\Controllers\\' . $info['controller'] . 'Controller';
         
         $controller = new $controllerName($request);
        
-
         if (isset($info['login']) && $info ['login']) {
+        
             if ($request->getCookies()->has('user')) {
                 $userId = $request->getCookies()->get('user');
                 $controller->setUserId($userId);
+               
             } else {
                 $errorController = new UserController($request);
                 return $errorController->login();
             }
         }
+      
     
         $params = $this->extractParams($route, $path);
-        
         return call_user_func_array([$controller, $info['method']], $params);
+        
         
     }
 

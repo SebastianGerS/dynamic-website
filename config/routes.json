@@ -11,6 +11,24 @@
         "controller": "User",
         "method": "login"
     },
+    "start/logedin": {
+        "controller": "Blogposts",
+        "method": "getAll",
+        "login": true
+
+    },
+    "start/logedin/createBlogposts": {
+        "controller": "Default",
+        "method": "createBlogpostPage",
+        "login": true
+    },
+    
+    "postToDatabase": {
+        "controller": "Blogposts",
+        "method": "insertBlogPostToDb",
+        "login": true
+    }, 
+
     "createUser": {
         "controller":"Default",
         "method": "createUserPage"

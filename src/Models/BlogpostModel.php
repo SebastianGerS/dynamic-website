@@ -137,7 +137,7 @@ class BlogpostModel extends AbstractModel
 
     public function getByUser(int $userId, int $page, int $pageLength):array {
         $start = $pageLength * ($page-1);
-
+       
         $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.user_id = :id LIMIT :start,:length';
        
         $statement = $this->db->prepare($query);

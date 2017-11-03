@@ -1,8 +1,7 @@
-</section><?php if(isset($userId) && $userId !== null) {
-    echo '<a href="/start/logedin/createBlogposts"><button>Create new blogpost</button></a>';
-    };?>
+<section> 
 
-<section>
+</section>
+<button>Create new blogpost</button>
 <section>
 <?php  foreach($blogposts as $blogpost): ?>
         <a href=<?php echo '/blogpost/' . $blogpost->getId()?>><article>
@@ -11,5 +10,6 @@
             <p><?php echo 'Datum: ' . $blogpost->getPostTime() ?></p>
             <p><?php echo substr($blogpost->getContent(), 0, 25) ?></p>
         </article></a>
+        <button>Edit Blogpost</button>
     <?php endforeach ?>
 </section>

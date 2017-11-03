@@ -23,4 +23,14 @@ class DefaultController extends AbstractController
 
         return $this->render('views/createUserPage.php', $properties);
     }
+
+    public function createBlogpostPage():string 
+    {   
+        $properties =[
+            'title' => 'en blog post'
+
+        ];
+
+        return $this->render('views/createBlogpostPage.php', $properties);
+    }
 }

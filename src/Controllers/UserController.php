@@ -44,9 +44,7 @@ class UserController extends AbstractController
         }
      
         setcookie('user', $user->getId());
-       
-        $newController = new BlogpostsController($this->request);
-        return $newController->getAll(); 
+        header("Location: /start/logedin");
     }
 
     public function getAll(): string
@@ -56,7 +54,7 @@ class UserController extends AbstractController
         $users = $userModel->getAll();
 
         $properties = [
-            'customers' => $user
+            'users' => $user
         ];
         return $this->render('views/users.php');
     }
@@ -72,7 +70,7 @@ class UserController extends AbstractController
             return $this->render('views\user.php', $properties);
         }
 
-        $properties = ['customer' => $user];
+        $properties = ['user' => $user];
         return $this->render('views/user.php',$properties);
     }
 

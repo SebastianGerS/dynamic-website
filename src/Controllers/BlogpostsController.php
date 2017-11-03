@@ -15,7 +15,8 @@ class BlogpostsController extends AbstractController
         
         $blogposts = $blogpostModel->getAllBlogposts($page, self::PAGE_LENGTH);
         $properties = [
-            'blogposts' => $blogposts
+            'blogposts' => $blogposts,
+            'userId' => $this->userId
         ];
 
         return $this->render('views/blogposts.php', $properties);
@@ -41,14 +42,16 @@ class BlogpostsController extends AbstractController
         $page = (int)$page;
         $blogpostModel = new BlogpostModel();
         $blogposts = $blogpostModel->getByUser($this->userId, $page, self::PAGE_LENGTH);
-
+       
         $properties = [
-            'blogposts' => $blogposts
+            'blogposts' => $blogposts,
+
         ];
 
         return $this->render('views/blogposts.php', $properties);
     }
     public function getByUser(): string {
+       
         return $this->getByUserWithPage(1);   
     }
 }

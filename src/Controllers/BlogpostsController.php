@@ -32,7 +32,8 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
         $blogposts = $blogpostModel->getBlogpost($id);
         $properties = [
-            'blogposts' => $blogposts
+            'blogposts' => $blogposts,
+            'userId' => $this->userId
         ];
 
         return $this->render('views/blogpost.php', $properties);
@@ -53,5 +54,45 @@ class BlogpostsController extends AbstractController
     public function getByUser(): string {
        
         return $this->getByUserWithPage(1);   
+    }
+
+    public function insertBlogPostToDb() {
+
+        if(!$this->request->isPost()) 
+        {   
+            
+            return $this->render('views/createBlogpostPage.php');
+        }
+        
+
+        $params = $this->request->getParams();
+      
+        if (!$params->has('post_name')) {
+            $params = ['errorMessage' => 'Du måste ge dit inlägg en titel'];
+            return $this->render('views/createBlogpostPage.php', $params);
+        } else if (!$params->has('tagname')) {
+            $params = ['errorMessage' => 'Du måste ge dit inlägg minst en tag'];
+            return $this->render('views/createBlogpostPage.php', $params);
+        } else if (!$params->has('content')) {
+            $params = ['errorMessage' => 'Ditt inlägg måste ha innehåll för att kunna skapas'];
+            return $this->render('views/createBlogpostPage.php', $params);
+        }
+
+      
+        
+        $postName = $params->getString('post_name');
+        $content = $params->getString('content');
+        $tags = explode(" ", $params->getString('tagname'));
+        
+        $blogpostModel = new BlogpostModel();
+       
+        $blogpostModel->insertBlogPostToDb($this->userId, $postName, $content, $tags);
+       
+        header("Location: /start/logedin");
+    }
+
+    public function editBlogpost() {
+        $blogpostModel = new BlogpostModel();
+        $blogpostModel->editBlogpost($this->userId, $postName, $content, $tags);
     }
 }

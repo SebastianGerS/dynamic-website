@@ -75,7 +75,7 @@ nav ul li {
 
 body {
     background-color: white;
-    height: 80em;
+    min-height: 80em;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -115,7 +115,7 @@ body section article form {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 10em;
+    min-height: 10em;
 }
 body section article form input {
     width: 75%;
@@ -148,5 +148,5 @@ footer p {
 }
 
 #content {
-    height: 30em;
+    min-height: 20em;
 }

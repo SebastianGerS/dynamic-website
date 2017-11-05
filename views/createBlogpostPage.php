@@ -1,9 +1,10 @@
 <section>  
     <article id="create-blogpost-form"> 
-        <form>
-            <input name="post_name"type="text" placeholder="Titel" required>
+        <form action="/postToDatabase" method="post">
+            <input name="post_name" type="text" placeholder="Titel" required>
+            <input name="tagname" type="text" placeholder="Tags" required>
             <input id="content" name ="content" type="text"  required>
-            <button action="" method0"post" type="submit">Skapa blogpost</button>
+            <button type="submit">Skapa blogpost</button>
         </form>  
     </article>
 </section>

@@ -22,7 +22,14 @@
         "method": "createBlogpostPage",
         "login": true
     },
-    
+    "start/logedin/editBlogpost/:id": {
+        "controller": "Default",
+        "method": "blogpostEditPage",
+        "login": true,
+        "params": {
+            "id": "number"
+        }
+    },
     "postToDatabase": {
         "controller": "Blogposts",
         "method": "insertBlogPostToDb",
@@ -47,6 +54,7 @@
     "blogpost/:id": {
         "controller": "Blogposts",
         "method": "getBlogpost",
+        "login": true,
         "params": {
             "id": "number"
         }

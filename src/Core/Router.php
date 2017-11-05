@@ -22,11 +22,12 @@ class Router
     public function route(Request $request): string 
     {
         $path = $request->getPath();
-        
+       
         foreach($this->routeMap as $route => $info) {
             $regexRoute = $this->getRegexRoute($route, $info);
-           
+            
             if (preg_match("@^/$regexRoute$@", $path)) {
+               
                 return $this->executeController($route, $path, $info, $request);
             }
            

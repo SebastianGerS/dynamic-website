@@ -33,4 +33,20 @@ class DefaultController extends AbstractController
 
         return $this->render('views/createBlogpostPage.php', $properties);
     }
+
+    public function blogpostEditPage():string 
+    {   
+        
+        $link = $this->request->getParams();
+        var_dump($link);
+        var_dump("hej hej");
+        die;
+        
+        $properties =[
+            'title' => 'Här kan du editera dina post'
+
+        ];
+
+        return $this->render('views/blogpostEditPage.php', $properties);
+    }
 }

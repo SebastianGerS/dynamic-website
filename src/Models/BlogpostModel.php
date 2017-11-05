@@ -12,6 +12,7 @@ class BlogpostModel extends AbstractModel
 
     public function insertBlogPostToDb(int $userId, string $postName, string $content, array $tags)
     {
+
         $this->db->beginTransaction();
     
         try {

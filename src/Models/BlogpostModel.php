@@ -194,7 +194,32 @@ class BlogpostModel extends AbstractModel
             throw $e;
         }
 
+    }
+
+    public function searchByTagName(string $tagname) {
+
+        $query = 'SELECT id FROM tags WHERE tagname =:tagname';
+        $statement = $this->db->prepare($query);
+        $statement->bindValue("tagname", $tagname);
+        $statement->execute();
+        $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
+        $query = 'SELECT bi.id, bi.user_id, bi.post_time, bi.post_name, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE ptc.tag_id =:tag_id';
+        $statement = $this->db->prepare($query);
+        $statement->bindValue("tag_id", $tagId);
+        if(!$statement->execute()) 
+        {
+            throw new Exception($statement->errorinfo()[2]);
+        }
+
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
+        return $result;
+
+       
+
 
     }
+
+
 }
 ?>

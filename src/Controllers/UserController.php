@@ -74,5 +74,46 @@ class UserController extends AbstractController
         return $this->render('views/user.php',$properties);
     }
 
+    public function createUser() {
+
+        if(!$this->request->isPost()) 
+        {
+            
+            return $this->render('views/createUserPage.php');
+        }
+
+        $params = $this->request->getParams();
+
+
+        if (!$params->has('firstname')) {
+            $params = ['errorMessage' => 'Du måste fylla i dit förnamn'];
+            return $this->render('views/createUserPage.php', $params);
+        } else if (!$params->has('surename')) {
+            $params = ['errorMessage' => 'Du måste fyll i ditt efternamn'];
+            return $this->render('views/createUserPage.php', $params);
+        } else if (!$params->has('email')) {
+            $params = ['errorMessage' => 'Du måste fylla i en epost adress'];
+            return $this->render('views/createUserPage.php', $params);
+        } else if (!$params->has('username')) {
+            $params = ['errorMessage' => 'Du måste välja ett användarnamn'];
+            return $this->render('views/createUserPage.php', $params);
+        } else if (!$params->has('password')) {
+            $params = ['errorMessage' => 'Du måste välja ett lösenord'];
+            return $this->render('views/createUserPage.php', $params);
+        }
+
+        $firstname = $params->getString('firstname');
+        $surename = $params->getString('surename');
+        $email = $params->getString('email');
+        $username = $params->getString('username');
+        $password = $params->getString('password');
+       
+
+        $userModel = new userModel();
+        $userModel->addUser($firstname, $surename, $email, $username, $password);
+
+        header("Location: /start");
+    }
+
 
 }

@@ -134,4 +134,32 @@ class BlogpostsController extends AbstractController
 
         return $this->render('views/blogpostEditPage.php', $properties);
     }
+
+    public function searchByTagName() {
+       
+
+        $params = $this->request->getParams();
+
+        if (!$params->has('tagname')) {
+            $params = ['errorMessage' => 'skriv in den taggen du vill söka efter'];
+            return $this->render('views/blogposts/.php', $params);
+        }
+
+        $tagname = $params->getString('tagname');  
+
+        $blogpostModel = new BlogpostModel();
+        
+        $blogposts = $blogpostModel->searchByTagName($tagname);
+       if (empty($blogposts)) {
+        $params = ['errorMessage' => 'inga sökningar med angivna parametrar hittades'];
+        return $this->render('views/blogposts.php', $params);
+       }
+      
+        $properties =[
+            'title' => 'Här kan du editera dina post',
+            'blogposts' => $blogposts
+        ];
+        return $this->render('views/blogposts.php', $properties);
+    }
+
 }

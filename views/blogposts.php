@@ -1,8 +1,13 @@
 </section><?php if(isset($userId) && $userId !== null) {
     echo '<a href="/start/logedin/createBlogposts"><button>Create new blogpost</button></a>';
     };?>
-
 <section>
+
+</section><?php if(isset($errorMessage)): ?> 
+    <h2 id="errorMessage"><?php echo $errorMessage ?></h2>
+    <?php endif ?>
+<section>
+
 <section>
 <?php  foreach($blogposts as $blogpost): ?>
         <a href=<?php echo '/blogpost/' . $blogpost->getId()?>><article>

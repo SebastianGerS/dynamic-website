@@ -150,3 +150,7 @@ footer p {
 #content {
     min-height: 20em;
 }
+
+#errorMessage {
+    margin: 0 auto;
+}

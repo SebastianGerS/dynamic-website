@@ -13,8 +13,8 @@
         </div>
         <div id="center-header">
         <h1>Välkommen till bloggen!</h1>
-        <form id=search-form>
-            <input type=text placeholder="type your search">
+        <form id=search-form action="/blogposts/search" method="get">
+            <input type=text placeholder="type your search"  name="tagname">
             <div id="hashtags">
             <button>#programmering</button>
             <button>#musik</button>
@@ -23,7 +23,7 @@
         </form>
         </div>
         <div id="login-form">
-            <a href="/createUser">skapa användare</a>
+            <a href="/start/createUser">skapa användare</a>
             <form action="/login" method="post">
                 <input type="text" name="username" placeholder="Användarnamn">
                 <input type="text" name="password" placeholder="Lösenord">

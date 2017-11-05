@@ -44,9 +44,14 @@
         "login": true
     }, 
 
-    "createUser": {
+    "start/createUser": {
         "controller":"Default",
         "method": "createUserPage"
+    },
+
+    "createUser": {
+        "controller":"User",
+        "method": "createUser"
     },
     "blogposts/:page": {
         "controller": "Blogposts",
@@ -69,7 +74,7 @@
     },
     "blogposts/search": {
         "controller": "Blogposts",
-        "method": "search"
+        "method": "searchByTagName"
     },
     "my-blogposts": {
         "controller": "Blogposts",

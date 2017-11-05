@@ -1,12 +1,12 @@
 
 <section>  
     <article id="create-user-form"> 
-        <form>
-            <input type="text" placeholder="Förnamn" required>
-            <input type="text" placeholder="Efternamn" required>
-            <input type="text" placeholder="Epost" required>
-            <input type="text" placeholder="Användarnamn" required>
-            <input type="text" placeholder="Lösenord" required>
+        <form action="/createUser" method="post">
+            <input name="firstname" type="text" placeholder="Förnamn" required>
+            <input name="surename" type="text" placeholder="Efternamn" required>
+            <input name="email" type="text" placeholder="Epost" required>
+            <input name="username" type="text" placeholder="Användarnamn" required>
+            <input name="password" type="text" placeholder="Lösenord" required>
             <button type="submit">Skapa användare</button>
         </form>  
     </article>

@@ -151,6 +151,50 @@ class BlogpostModel extends AbstractModel
         return $result;
 
     }
+    public function editBlogpost(int $blogpostId, string $postName, array $tags, string $content) {
+        $this->db->beginTransaction();
+        try {
 
+        
+            $query = 'UPDATE blogposts_info SET post_name =:post_name WHERE id =:blogpost_id';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue('blogpost_id', $blogpostId);
+            $statement->bindValue('post_name', $postName);
+            if (!$statement->execute()) {
+                
+                throw new Exception($statement->errorinfo()[2]);;
+            }
+            
+            $query = 'UPDATE blogposts_content SET content =:content WHERE id =:blogpost_id';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue('blogpost_id', $blogpostId);
+            $statement->bindValue('content', $content);
+            if (!$statement->execute()) {
+                throw new Exception($statement->errorinfo()[2]);;
+                
+            }
+        
+            $this->insertTagsToDb($tags);
+        
+            $query = 'DELETE FROM post_tag_correspondens WHERE post_id =:blogpost_id';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("blogpost_id", $blogpostId);
+            if(!$statement->execute()) 
+            {
+                throw new Exception($statement->errorinfo()[2]);
+            }
+
+            $this->createTagPostConnection($tags, $blogpostId);
+
+            $this->db->commit();
+
+        } catch(Exception $e) {
+
+            $this->db->rollBack();
+            throw $e;
+        }
+
+
+    }
 }
 ?>

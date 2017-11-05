@@ -23,8 +23,16 @@
         "login": true
     },
     "start/logedin/editBlogpost/:id": {
-        "controller": "Default",
+        "controller": "Blogposts",
         "method": "blogpostEditPage",
+        "login": true,
+        "params": {
+            "id": "number"
+        }
+    },
+    "edit/:id": {
+        "controller": "Blogposts",
+        "method": "editPostInDatabase",
         "login": true,
         "params": {
             "id": "number"

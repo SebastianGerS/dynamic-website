@@ -91,8 +91,47 @@ class BlogpostsController extends AbstractController
         header("Location: /start/logedin");
     }
 
-    public function editBlogpost() {
+    public function editPostInDatabase() {
+
+      
+        $params = $this->request->getParams();
+
+        if (!$params->has('post_name')) {
+            $params = ['errorMessage' => 'Du får ändra title, men du kan inte ta bort titeln helt'];
+            return $this->render('views/createBlogpostPage.php', $params);
+        } else if (!$params->has('tagname')) {
+            $params = ['errorMessage' => 'Du får ändra och lägga till taggar, men du måste ha minst en tag'];
+            return $this->render('views/createBlogpostPage.php', $params);
+        } else if (!$params->has('content')) {
+            $params = ['errorMessage' => 'Du får ändra innehållet, men du kan inte ta bort allt innehåll, önskar du ta bort inlägget var god och använd tabort knappen istället'];
+            return $this->render('views/createBlogpostPage.php', $params);
+        }
+        $blogpostId = $params->getInt('blogpost_id');
+        $postName = $params->getString('post_name');
+        $content = $params->getString('content');
+        $tags = explode(" ", $params->getString('tagname'));
         $blogpostModel = new BlogpostModel();
-        $blogpostModel->editBlogpost($this->userId, $postName, $content, $tags);
+        
+        $blogpostModel->editBlogpost($blogpostId, $postName, $tags, $content);
+        header("Location: /blogpost/" . $blogpostId);
+
+    }
+
+    public function blogpostEditPage():string 
+    {   
+        $params = $this->request->getParams();
+        $blogpostId = $params->getInt('blogpost_id');
+       
+
+        $blogpostModel = new BlogpostModel();
+        
+        $blogposts = $blogpostModel->getBlogpost($blogpostId);
+        $properties =[
+            'title' => 'Här kan du editera dina post',
+            'blogposts' => $blogposts
+
+        ];
+
+        return $this->render('views/blogpostEditPage.php', $properties);
     }
 }

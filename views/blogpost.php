@@ -1,8 +1,10 @@
 <section>
 <?php  foreach($blogposts as $blogpost): ?>
             <?php if(isset($userId) && $userId !== null && $userId == $blogpost->getUserId()): ?>
-            <a href=<?php echo "/start/logedin/editBlogpost/" . $blogpost->getId() ?>>Editera inlägget</a>
-        <?php endif ?>
+            <form action=<?php echo "/start/logedin/editBlogpost/" . $blogpost->getId() ?> method="get">
+                <button name="blogpost_id" value=<?php echo $blogpost->getId()?> >editera inlägget</button>
+                <form>
+            <?php endif ?>
         <article>
             <h1><?php echo $blogpost->getPostName() ?></h1>
             <p><?php echo $blogpost->getContent() ?></p>

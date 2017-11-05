@@ -12,7 +12,9 @@
             <p><?php echo substr($blogpost->getContent(), 0, 25) ?></p>
         </article></a>
         <?php if(isset($userId) && $userId !== null && $userId == $blogpost->getUserId()): ?>
-            <a href=<?php echo "logedin/editBlogpost/" . $blogpost->getId() ?> >editera inlägget</a>
+        <form action=<?php echo "logedin/editBlogpost/" . $blogpost->getId() ?> method="get">
+            <button name="blogpost_id" value=<?php echo $blogpost->getId()?> >editera inlägget</button>
+            <form>
         <?php endif ?>
     <?php endforeach ?>
 </section>

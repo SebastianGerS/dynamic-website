@@ -30,6 +30,11 @@
             "id": "number"
         }
     },
+    "deletePostFromDB": {
+        "controller": "Blogposts",
+        "method": "deletePostFromDb",
+        "login": true
+    },
     "edit/:id": {
         "controller": "Blogposts",
         "method": "editPostInDatabase",

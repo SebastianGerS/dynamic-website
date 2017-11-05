@@ -162,4 +162,18 @@ class BlogpostsController extends AbstractController
         return $this->render('views/blogposts.php', $properties);
     }
 
+    public function deletePostFromDb() {
+        
+        $params = $this->request->getParams();
+        $blogpostId = $params->getInt('blogpost_id');
+       
+        $blogpostModel = new BlogpostModel();
+        
+        $blogposts = $blogpostModel->deletePostFromDb($blogpostId);
+       
+        header("Location: start/logedin");
+
+       
+    }
+
 }

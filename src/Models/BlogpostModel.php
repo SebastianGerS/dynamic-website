@@ -220,6 +220,44 @@ class BlogpostModel extends AbstractModel
 
     }
 
+    public function deletePostFromDb(int $id) {
+        $this->db->beginTransaction();
+       
+        try {
+
+            $query = 'DELETE FROM blogposts_content WHERE id =:id';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("id", $id);
+            if(!$statement->execute()) 
+            {
+                throw new Exception($statement->errorinfo()[2]);
+            }
+
+            $query = 'DELETE FROM blogposts_info WHERE id =:id';
+           
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("id", $id);
+            if(!$statement->execute()) 
+            {   
+                throw new Exception($statement->errorinfo()[2]);
+            }           
+            
+            $query = 'DELETE FROM post_tag_correspondens WHERE post_id =:blogpost_id';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("blogpost_id", $id);
+            if(!$statement->execute()) 
+            {
+                throw new Exception($statement->errorinfo()[2]);
+            }
+
+            $this->db->commit();
+
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
+
 
 }
 ?>

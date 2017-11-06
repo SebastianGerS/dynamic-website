@@ -14,9 +14,10 @@ class BlogpostsController extends AbstractController
        $blogpostModel = new BlogpostModel();
         
         $blogposts = $blogpostModel->getAllBlogposts($page, self::PAGE_LENGTH);
+        $coockie = $this->coockie->getInt("user");
         $properties = [
             'blogposts' => $blogposts,
-            'userId' => $this->userId
+            'userId' => $coockie
         ];
 
         return $this->render('views/blogposts.php', $properties);
@@ -31,9 +32,10 @@ class BlogpostsController extends AbstractController
     {   
         $blogpostModel = new BlogpostModel();
         $blogposts = $blogpostModel->getBlogpost($id);
+        $coockie = $this->coockie->getInt("user");
         $properties = [
             'blogposts' => $blogposts,
-            'userId' => $this->userId
+            'userId' => $coockie
         ];
 
         return $this->render('views/blogpost.php', $properties);

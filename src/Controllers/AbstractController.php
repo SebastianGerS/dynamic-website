@@ -8,10 +8,13 @@ abstract class AbstractController
     protected $request;
     protected $view;
     protected $userId;
+    protected $coockie;
 
     public function __construct(Request $request)
     {   
         $this->request = $request;
+        
+        $this->coockie = $this->request->getCookies();
     }
 
     public function setUserId(int $userId) 

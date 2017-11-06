@@ -47,6 +47,13 @@ class UserController extends AbstractController
         header("Location: /start/logedin");
     }
 
+    public function logout(): string 
+    {
+        $this->setUserId(null);
+        setcookie('user', $this->userId);
+        header("Location: /start");
+    }
+
     public function getAll(): string
     {
         $userModel = new UserModel();

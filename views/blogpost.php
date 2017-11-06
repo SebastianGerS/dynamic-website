@@ -1,6 +1,6 @@
 <section>
 <?php  foreach($blogposts as $blogpost): ?>
-            <?php if(isset($userId) && $userId !== null && $userId == $blogpost->getUserId()): ?>
+            <?php if(isset($userId) && !empty($userId) && $userId === $blogpost->getUserId()): ?>
             <form action=<?php echo "/start/logedin/editBlogpost/" . $blogpost->getId() ?> method="get">
                 <button name="blogpost_id" value=<?php echo $blogpost->getId()?> >editera inlägget</button>
             </form>

@@ -11,6 +11,10 @@
         "controller": "User",
         "method": "login"
     },
+    "logout": {
+        "controller": "User",
+        "method": "logout"
+    },
     "start/logedin": {
         "controller": "Blogposts",
         "method": "getAll",
@@ -72,7 +76,6 @@
     "blogpost/:id": {
         "controller": "Blogposts",
         "method": "getBlogpost",
-        "login": true,
         "params": {
             "id": "number"
         }

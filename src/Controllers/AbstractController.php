@@ -22,6 +22,11 @@ abstract class AbstractController
         $this->userId = $userId;
     }
 
+    public function unsetUserId() 
+    {
+        $this->userId = null;
+    }
+
     protected function render(string $template, array $params): string 
     {
         extract($params);

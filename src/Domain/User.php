@@ -6,17 +6,17 @@ class User
     protected $type;
     protected $id;
     protected $firstname;
-    protected $surename;
+    protected $surname;
     protected $username;
     protected $password;
     protected $email;
     
 
-    public function __construct($type, $id, $firstname, $surename, $username, $password, $email) {
+    public function __construct($type, $id, $firstname, $surname, $username, $password, $email) {
         $this->type = type;
         $this->id = $id;
         $this->firstname = $firstname;
-        $this->surename = $surename;
+        $this->surname = $surname;
         $this->username = $username;
         $this->password = $password;
         $this->email = $email;  
@@ -34,7 +34,7 @@ class User
         return $this->firstname;
     }
 
-    public function getSurename() {
+    public function getSurname() {
         return $this->surename;
     }
    

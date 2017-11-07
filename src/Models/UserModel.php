@@ -8,32 +8,33 @@ use Blog\Domain\User;
 
 class UserModel extends AbstractModel 
 {
-    const CLASSNAME = '\Blog\Domain\User\UserFactory';
+    const CLASSNAME = '\Blog\Domain\User';
 
     public function addUser (
         string $firstname,
-        string $surename,
+        string $surname,
         string $email, 
         string $username,
         string $password,
         string $type = "user") {
-    
-    
+          
         $this->db->beginTransaction();
        
         try {
-            $query = 'INSERT INTO users(firstname, surename, email, username, password, type) VALUES (:firstname, :surename, :email, :username, :password, :type)';
+            $query = 'INSERT INTO users(firstname, surname, email, username, password, type) VALUES (:firstname, :surname, :email, :username, :password, :type)';
             $statement = $this->db->prepare($query);
+            
            
             $statement->bindValue("firstname",$firstname);
-            $statement->bindValue("surename",$surename);
+            $statement->bindValue("surname",$surname);
             $statement->bindValue("email",$email);
             $statement->bindValue("username",$username);
             $statement->bindValue("password",$password);
-            $statement->bindValue("type",$type);
-            
+            $statement->bindValue("type", $type);
+           
             if(!$statement->execute()) 
             {
+                
                 throw new UnableToCreateUserException();
             }
             
@@ -92,7 +93,7 @@ class UserModel extends AbstractModel
             $user['type'],
             $user['id'],
             $user['firstname'],
-            $user['surename'],
+            $user['surname'],
             $user['username'],
             $user['password'],
             $user['email']

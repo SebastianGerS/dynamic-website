@@ -165,14 +165,14 @@ class BlogpostsController extends AbstractController
     }
 
     public function deletePostFromDb() {
-        
+       
         $params = $this->request->getParams();
         $blogpostId = $params->getInt('blogpost_id');
        
+    
         $blogpostModel = new BlogpostModel();
-        
-        $blogposts = $blogpostModel->deletePostFromDb($blogpostId);
        
+        $blogposts = $blogpostModel->deletePostFromDb($blogpostId);
         header("Location: start/logedin");
 
        

@@ -29,7 +29,7 @@ class BlogpostModel extends AbstractModel
     }
     
     protected function insertBlogpostInfoToDB(int $userId, string $postName) {
-        $query = 'INSERT INTO blogposts_info(user_id, post_name, post_time) VALUES(:user_id, :post_name, NOW())';
+        $query = 'INSERT INTO blogposts_info(user_id, post_name, post_creation_time) VALUES(:user_id, :post_name, NOW())';
         $statement = $this->db->prepare($query);
         $statement->bindValue("user_id", $userId);
         $statement->bindValue("post_name", $postName);
@@ -110,7 +110,7 @@ class BlogpostModel extends AbstractModel
     {
         $start = $pageLength * ($page -1);
        
-        $query = 'SELECT bi.id, bi.user_id, bi.post_time, bi.post_name, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LIMIT :page,:length';
+        $query = 'SELECT bi.id, bi.user_id, bi.post_creation_time, bi.post_name, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LIMIT :page,:length';
         $statement = $this->db->prepare($query);
        
         $statement->bindParam('page', $start, PDO::PARAM_INT);
@@ -125,7 +125,7 @@ class BlogpostModel extends AbstractModel
 
     public function getBlogpost(int $id) 
     {
-        $query = 'SELECT bi.id, bi.user_id, bi.post_time, bi.post_name, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.id =:id';
+        $query = 'SELECT bi.id, bi.user_id, bi.post_creation_time, bi.post_name, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.id =:id';
         $statement = $this->db->prepare($query);
         $statement->bindParam('id', $id,PDO::PARAM_INT);
 
@@ -203,7 +203,7 @@ class BlogpostModel extends AbstractModel
         $statement->bindValue("tagname", $tagname);
         $statement->execute();
         $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
-        $query = 'SELECT bi.id, bi.user_id, bi.post_time, bi.post_name, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE ptc.tag_id =:tag_id';
+        $query = 'SELECT bi.id, bi.user_id, bi.post_creation_time, bi.post_name, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE ptc.tag_id =:tag_id';
         $statement = $this->db->prepare($query);
         $statement->bindValue("tag_id", $tagId);
         if(!$statement->execute()) 
@@ -222,34 +222,36 @@ class BlogpostModel extends AbstractModel
 
     public function deletePostFromDb(int $id) {
         $this->db->beginTransaction();
-       
+        
         try {
 
             $query = 'DELETE FROM blogposts_content WHERE id =:id';
             $statement = $this->db->prepare($query);
             $statement->bindValue("id", $id);
+            
+            if(!$statement->execute()) 
+            {
+                throw new Exception($statement->errorinfo()[2]);
+            }
+
+            $query = 'DELETE FROM post_tag_correspondens WHERE post_id =:blogpost_id';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("blogpost_id", $id);
+
             if(!$statement->execute()) 
             {
                 throw new Exception($statement->errorinfo()[2]);
             }
 
             $query = 'DELETE FROM blogposts_info WHERE id =:id';
-           
             $statement = $this->db->prepare($query);
             $statement->bindValue("id", $id);
+         
             if(!$statement->execute()) 
-            {   
+            {     
                 throw new Exception($statement->errorinfo()[2]);
             }           
             
-            $query = 'DELETE FROM post_tag_correspondens WHERE post_id =:blogpost_id';
-            $statement = $this->db->prepare($query);
-            $statement->bindValue("blogpost_id", $id);
-            if(!$statement->execute()) 
-            {
-                throw new Exception($statement->errorinfo()[2]);
-            }
-
             $this->db->commit();
 
         } catch (Exception $e) {

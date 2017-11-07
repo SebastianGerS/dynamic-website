@@ -8,7 +8,7 @@ class UserController extends AbstractController
 {
 
     public function login(): string 
-    {
+    {    
         if(!$this->request->isPost()) 
         {
             
@@ -16,20 +16,22 @@ class UserController extends AbstractController
         }
 
         $params = $this->request->getParams();
-       
+        
         if (!$params->has('username')) {
+           
             $params = ['errorMessage' => 'Du måste fylla i dit användarnamn för att kuna logga in'];
             return $this->render('views/start.php', $params);
         } else if (!$params->has('password')) {
+            
             $params = ['errorMessage' => 'Du måste fylla i ditt lösenor för att kunna logga in'];
             return $this->render('views/start.php', $params);
+           
         }
-       
+        
         $username = $params->getString('username');
         $password = $params->getString('password');
        
         $userModel = new UserModel();
-       
         try {
             $user = $userModel->getByUsername($username);
         } catch (Exception $e) {
@@ -37,20 +39,21 @@ class UserController extends AbstractController
             return $this->render('views/start.php', $params);
         }
 
-       
+        
         if ($user->getPassword() !== $password) {
             $params = ['errorMessage' => 'Felaktigt lösenord'];
             return $this->render('views/start.php', $params);
         }
-     
-        setcookie('user', $user->getId());
+        
+        setcookie('user', $user->getId(), time()+86400);
         header("Location: /start/logedin");
     }
 
     public function logout(): string 
     {
-        $this->setUserId(null);
-        setcookie('user', $this->userId);
+      
+        $this->unsetUserId();
+        setcookie('user', "", time() -3600);
         header("Location: /start");
     }
 
@@ -90,12 +93,12 @@ class UserController extends AbstractController
         }
 
         $params = $this->request->getParams();
-
+       
 
         if (!$params->has('firstname')) {
             $params = ['errorMessage' => 'Du måste fylla i dit förnamn'];
             return $this->render('views/createUserPage.php', $params);
-        } else if (!$params->has('surename')) {
+        } else if (!$params->has('surname')) {
             $params = ['errorMessage' => 'Du måste fyll i ditt efternamn'];
             return $this->render('views/createUserPage.php', $params);
         } else if (!$params->has('email')) {
@@ -110,15 +113,15 @@ class UserController extends AbstractController
         }
 
         $firstname = $params->getString('firstname');
-        $surename = $params->getString('surename');
+        $surname = $params->getString('surname');
         $email = $params->getString('email');
         $username = $params->getString('username');
         $password = $params->getString('password');
-       
-
+        
         $userModel = new userModel();
-        $userModel->addUser($firstname, $surename, $email, $username, $password);
-
+        
+        $userModel->addUser($firstname, $surname, $email, $username, $password);
+       
         header("Location: /start");
     }
 

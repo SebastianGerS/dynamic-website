@@ -123,6 +123,27 @@ class BlogpostModel extends AbstractModel
         return $result;
     }
 
+    public function getTagsformPost(int $id)
+    {
+        $query = 'SELECT t.tagname FROM tags t LEFT JOIN post_tag_correspondens ptc ON t.id = ptc.tag_id LEFT JOIN blogposts_info bi ON ptc.post_id = bi.id WHERE bi.id =:id';
+        $statement = $this->db->prepare($query);
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $tags = $statement->fetchAll();
+        $result = "";
+        foreach($tags as $tag)
+        {
+            $result .=  $tag['tagname'] . " ";
+          
+        }
+        
+        $result = trim($result);
+    
+        return $result;
+    }
+
     public function getBlogpost(int $id) 
     {
         $query = 'SELECT bi.id, bi.user_id, bi.post_creation_time, bi.post_name, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.id =:id';

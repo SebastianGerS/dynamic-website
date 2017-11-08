@@ -44,6 +44,7 @@ class UserController extends AbstractController
             $params = ['errorMessage' => 'Felaktigt lösenord'];
             return $this->render('views/start.php', $params);
         }
+       
         
         setcookie('user', $user->getId(), time()+86400);
         header("Location: /start/logedin");

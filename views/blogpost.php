@@ -10,6 +10,7 @@
             <?php endif ?>
         <article>
             <h1><?php echo $blogpost->getPostName() ?></h1>
+            <p><?php echo 'Tags: ' . $tags?></p>
             <p><?php echo $blogpost->getContent() ?></p>
             <p><?php echo 'Skapad av: ' . $blogpost->getUsername() ?></p>
             <p><?php echo 'Datum: ' . $blogpost->getPostCreationTime() ?></p>

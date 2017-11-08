@@ -12,7 +12,7 @@ class BlogpostsController extends AbstractController
     {   
        $page = (int)$page;
        $blogpostModel = new BlogpostModel();
-        
+       
         $blogposts = $blogpostModel->getAllBlogposts($page, self::PAGE_LENGTH);
         $coockie = $this->coockie->getInt("user");
         $properties = [
@@ -25,16 +25,20 @@ class BlogpostsController extends AbstractController
     
     public function getAll():string
     {   
+       
         return $this->getAllWithPage(1);
     }
 
     public function getBlogpost($id):string
     {   
         $blogpostModel = new BlogpostModel();
+        
+        $tags = $blogpostModel->getTagsformPost($id);
         $blogposts = $blogpostModel->getBlogpost($id);
         $coockie = $this->coockie->getInt("user");
         $properties = [
             'blogposts' => $blogposts,
+            'tags'=> $tags,
             'userId' => $coockie
         ];
 
@@ -124,16 +128,17 @@ class BlogpostsController extends AbstractController
         $params = $this->request->getParams();
         $blogpostId = $params->getInt('blogpost_id');
        
-
         $blogpostModel = new BlogpostModel();
-        
+        $tags = $blogpostModel->getTagsformPost($blogpostId);
+      
         $blogposts = $blogpostModel->getBlogpost($blogpostId);
         $properties =[
             'title' => 'Här kan du editera dina post',
-            'blogposts' => $blogposts
+            'blogposts' => $blogposts,
+            'tags'=> $tags
 
         ];
-
+        
         return $this->render('views/blogpostEditPage.php', $properties);
     }
 

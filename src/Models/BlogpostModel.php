@@ -4,11 +4,13 @@ namespace Blog\Models;
 
 use PDO;
 use Blog\Domain\Blogpost;
+use Blog\Domain\Comment;
 
 class BlogpostModel extends AbstractModel 
 {
 
-    const CLASSNAME = '\Blog\Domain\Blogpost';
+    const BLOGPOSTCLASSNAME = '\Blog\Domain\Blogpost';
+    const COMMENTCLASSNAME ='\blog\Domain\Comment';
 
     public function insertBlogPostToDb(int $userId, string $postName, string $content, array $tags)
     {
@@ -119,7 +121,7 @@ class BlogpostModel extends AbstractModel
         $statement->execute();
         
        
-        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         return $result;
     }
 
@@ -152,7 +154,7 @@ class BlogpostModel extends AbstractModel
 
         $statement->execute();
 
-        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         return $result;
 
     }
@@ -168,7 +170,7 @@ class BlogpostModel extends AbstractModel
         $statement->bindParam('start', $start, PDO::PARAM_INT);
         $statement->bindParam('length', $pageLength, PDO::PARAM_INT);
         $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         return $result;
 
     }
@@ -233,7 +235,7 @@ class BlogpostModel extends AbstractModel
         }
 
         $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         return $result;
 
        
@@ -281,6 +283,40 @@ class BlogpostModel extends AbstractModel
         }
     }
 
+    public function insertCommentToDb(int $userId, int $blogpostId, string $content)
+    {
+      
+        $query = 'INSERT INTO blogposts_comments(post_id, content, user_id, post_creation_time) VALUES (:post_id, :content, :user_id, NOW())';
+        $statement = $this->db->prepare($query);
+        $statement->bindValue('post_id', $blogpostId);
+        $statement->bindValue('content', $content);
+        $statement->bindValue('user_id', $userId);
+       
+        if(!$statement->execute()) 
+        {     
+            throw new Exception($statement->errorinfo()[2]);
+        }       
+        
+        $statement->execute();
 
+    }
+
+    public function getComments(int $id)
+    {
+        $query ='SELECT bc.* , u.username FROM blogposts_comments bc LEFT JOIN users u ON u.id = bc.user_id WHERE bc.post_id = :post_id';
+        $statement = $this->db->prepare($query);
+        $statement->bindValue('post_id', $id);
+
+
+        if(!$statement->execute()) 
+        {     
+            throw new Exception($statement->errorinfo()[2]);
+        } 
+
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::COMMENTCLASSNAME);
+        return $result;
+
+    }
 }
 ?>

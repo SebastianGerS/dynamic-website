@@ -35,10 +35,12 @@ class BlogpostsController extends AbstractController
         
         $tags = $blogpostModel->getTagsformPost($id);
         $blogposts = $blogpostModel->getBlogpost($id);
+        $comments = $blogpostModel->getComments($id);
         $coockie = $this->coockie->getInt("user");
         $properties = [
             'blogposts' => $blogposts,
             'tags'=> $tags,
+            'comments' => $comments,
             'userId' => $coockie
         ];
 
@@ -191,7 +193,7 @@ class BlogpostsController extends AbstractController
     
         $blogpostModel = new BlogpostModel();
        
-        $blogposts = $blogpostModel->deletePostFromDb($commentId);
+        $blogposts = $blogpostModel->deleteCommentFromDb($commentId);
 
         header("Location: start/logedin");
     }
@@ -242,14 +244,15 @@ class BlogpostsController extends AbstractController
             return $this->render('views/createCommentPage.php', $params);
         }
 
-
+        
         $content = $params->getString('content');
-        $blogpostId = $params->getString('blogpost_id');
-        
+        $blogpostId = $params->getInt('blogpost_id');
+     
         $blogpostModel = new BlogpostModel();
-        
+       
         $blogpostModel->insertCommentToDb($this->userId, $blogpostId, $content);
-        
+      
         header("Location: /start/logedin");
     }
+
 }

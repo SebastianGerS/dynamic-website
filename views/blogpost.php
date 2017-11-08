@@ -19,12 +19,12 @@
                 <form action="/start/logedin/createComment" method="post">
                     <button name="blogpost_id" value=<?php echo $blogpost->getId()?>>Kommentera</button>
                 </form>
-            <?php endif ?>
+        <?php endif ?>
         <?php if(!empty($comments)): ?>   
             <?php foreach($comments as $comment): ?>
                 <article>
                     <p><?php echo $comment->getContent() ?></p>
-                    <p><?php echo 'Skapad av: ' . $comment->getUsername() ?></p>
+                    <p><?php echo 'Kommentar av: ' . $comment->getUsername() ?></p>
                     <p><?php echo 'Datum: ' . $comment->getPostCreationTime() ?></p>
                 </article>
                 <?php if(isset($userId) && !empty($userId) && $userId === $comment->getUserId()): ?>

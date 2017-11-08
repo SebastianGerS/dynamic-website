@@ -41,7 +41,7 @@ class DefaultController extends AbstractController
         $blogpostId = $params->getInt('blogpost_id');
         $properties =[
             'title' => 'en kommentar',
-            'blogpost_id' => $blogpostId
+            'blogpostId' => $blogpostId
 
         ];
 

@@ -39,6 +39,24 @@
         "method": "deletePostFromDb",
         "login": true
     },
+    "start/logedin/createComment": {
+        "controller": "Default",
+        "method": "createCommentPage",
+        "login": true
+    },
+    "deleteCommentFromDB": {
+        "controller": "Blogposts",
+        "method": "deleteCommentFromDb",
+        "login": true
+    },
+    "start/logedin/editComment/:id": {
+        "controller": "Blogposts",
+        "method": "CommentEditPage",
+        "login": true,
+        "params": {
+            "id": "number"
+        }
+    },
     "edit/:id": {
         "controller": "Blogposts",
         "method": "editPostInDatabase",
@@ -47,17 +65,28 @@
             "id": "number"
         }
     },
+    "editComment/:id": {
+        "controller": "Blogposts",
+        "method": "editCommentInDatabase",
+        "login": true,
+        "params": {
+            "id": "number"
+        }
+    },
+    "CommentToDatabase": {
+        "controller": "Blogposts",
+        "method": "insertCommentToDb",
+        "login": true
+    }, 
     "postToDatabase": {
         "controller": "Blogposts",
         "method": "insertBlogPostToDb",
         "login": true
     }, 
-
     "start/createUser": {
         "controller":"Default",
         "method": "createUserPage"
     },
-
     "createUser": {
         "controller":"User",
         "method": "createUser"

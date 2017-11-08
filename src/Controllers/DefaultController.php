@@ -34,5 +34,19 @@ class DefaultController extends AbstractController
         return $this->render('views/createBlogpostPage.php', $properties);
     }
 
+    public function createCommentPage():string 
+    {   
+       
+        $params = $this->request->getParams();
+        $blogpostId = $params->getInt('blogpost_id');
+        $properties =[
+            'title' => 'en kommentar',
+            'blogpost_id' => $blogpostId
+
+        ];
+
+        return $this->render('views/createCommentPage.php', $properties);
+    }
+
     
 }

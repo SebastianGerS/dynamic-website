@@ -169,7 +169,8 @@ class BlogpostsController extends AbstractController
         return $this->render('views/blogposts.php', $properties);
     }
 
-    public function deletePostFromDb() {
+    public function deletePostFromDb() 
+    {
        
         $params = $this->request->getParams();
         $blogpostId = $params->getInt('blogpost_id');
@@ -179,8 +180,76 @@ class BlogpostsController extends AbstractController
        
         $blogposts = $blogpostModel->deletePostFromDb($blogpostId);
         header("Location: start/logedin");
-
        
     }
 
+    public function deleteCommentFromDb() 
+    {
+        $params = $this->request->getParams();
+        $commentId = $params->getInt('comment_id');
+       
+    
+        $blogpostModel = new BlogpostModel();
+       
+        $blogposts = $blogpostModel->deletePostFromDb($commentId);
+
+        header("Location: start/logedin");
+    }
+
+    public function commentEditPage():string 
+    {   
+        $params = $this->request->getParams();
+        $commentId = $params->getInt('comment_id');
+       
+        $blogpostModel = new BlogpostModel();
+      
+        $comment = $blogpostModel->getcomment($commentId);
+        $properties =[
+            'title' => 'Här kan du editera dina post',
+            'comment' => $comment
+
+        ];
+        
+        return $this->render('views/commentEditPage.php', $properties);
+    }
+
+    public function editCommentInDatabase() {
+        
+        
+        $params = $this->request->getParams();
+
+        
+        if (!$params->has('content')) {
+            $params = ['errorMessage' => 'Du får ändra innehållet, men du kan inte ta bort allt innehåll, önskar du ta bort inlägget var god och använd tabort knappen istället'];
+            return $this->render('views/commentEditPage.php', $params);
+        }
+        $commentId = $params->getInt('comment_id');
+        $content = $params->getString('content');
+        $blogpostModel = new BlogpostModel();
+        
+        $blogpostModel->editComment($commentId, $content);
+        header("Location: /blogposts");
+
+    }
+
+    public function insertCommentToDb() {
+        
+        $params = $this->request->getParams();
+        
+       
+        if (!$params->has('content')) {
+            $params = ['errorMessage' => 'Ditt inlägg måste ha innehåll för att kunna skapas'];
+            return $this->render('views/createCommentPage.php', $params);
+        }
+
+
+        $content = $params->getString('content');
+        $blogpostId = $params->getString('blogpost_id');
+        
+        $blogpostModel = new BlogpostModel();
+        
+        $blogpostModel->insertCommentToDb($this->userId, $blogpostId, $content);
+        
+        header("Location: /start/logedin");
+    }
 }

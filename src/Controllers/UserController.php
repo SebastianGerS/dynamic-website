@@ -32,8 +32,10 @@ class UserController extends AbstractController
         $password = $params->getString('password');
        
         $userModel = new UserModel();
+       
         try {
             $user = $userModel->getByUsername($username);
+            
         } catch (Exception $e) {
             $params = ['errorMessage' => 'Fel användarnamn, försök igen'];
             return $this->render('views/start.php', $params);
@@ -44,9 +46,10 @@ class UserController extends AbstractController
             $params = ['errorMessage' => 'Felaktigt lösenord'];
             return $this->render('views/start.php', $params);
         }
-       
+      
         
         setcookie('user', $user->getId(), time()+86400);
+        setcookie('userType', $user->getType(), time()+86400);
         header("Location: /start/logedin");
     }
 
@@ -55,6 +58,7 @@ class UserController extends AbstractController
       
         $this->unsetUserId();
         setcookie('user', "", time() -3600);
+        setcookie('userType', "", time()-3600);
         header("Location: /start");
     }
 

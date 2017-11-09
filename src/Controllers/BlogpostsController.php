@@ -134,7 +134,7 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
         
         $blogpostModel->editBlogpost($blogpostId, $postName, $tags, $content);
-        header("Location: /blogpost/" . $blogpostId);
+        header("Location: /start/blogpost/" . $blogpostId);
 
     }
 
@@ -209,7 +209,7 @@ class BlogpostsController extends AbstractController
        
         $blogposts = $blogpostModel->deleteCommentFromDb($commentId);
 
-        header("Location: blogpost/$blogpostId");
+        header("Location: start/blogpost/$blogpostId");
     }
 
     public function commentEditPage():string 
@@ -248,7 +248,7 @@ class BlogpostsController extends AbstractController
         
         $blogpostModel->editComment($commentId, $content);
 
-        header("Location: /blogpost/$blogpostId");
+        header("Location: /start/blogpost/$blogpostId");
 
     }
 
@@ -270,7 +270,7 @@ class BlogpostsController extends AbstractController
        
         $blogpostModel->insertCommentToDb($this->userId, $blogpostId, $content);
       
-        header("Location: /blogpost/$blogpostId");
+        header("Location: /start/blogpost/$blogpostId");
     }
 
 }

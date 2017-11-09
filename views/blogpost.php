@@ -3,7 +3,7 @@
         <button> Tillbaka</button>
     </form>
     <?php  foreach($blogposts as $blogpost): ?>
-        <?php if(isset($userId) && !empty($userId) && $userId === $blogpost->getUserId()): ?>
+        <?php if(isset($userId) && !empty($userId) && $userId === $blogpost->getUserId()|| $_COOKIE[userType] === "admin" ): ?>
             <form action=<?php echo "/start/logedin/editBlogpost/" . $blogpost->getId() ?> method="get">
                 <button name="blogpost_id" value=<?php echo $blogpost->getId()?> >Editera inlägget</button>
             </form>
@@ -30,7 +30,7 @@
                     <p><?php echo 'Kommentar av: ' . $comment->getUsername() ?></p>
                     <p><?php echo 'Datum: ' . $comment->getPostCreationTime() ?></p>
                 </article>
-                <?php if(isset($userId) && !empty($userId) && $userId === $comment->getUserId()): ?>
+                <?php if(isset($userId) && !empty($userId) && $userId === $comment->getUserId()|| $_COOKIE[userType] === "admin" ): ?>
                     <form action=<?php echo "/start/logedin/editComment/" . $comment->getId() ?> method="post">
                         <button name="comment_id" value=<?php echo $comment->getId()?> >Editera</button>
                     </form>

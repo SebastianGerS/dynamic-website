@@ -81,7 +81,6 @@ class UserModel extends AbstractModel
         
         $query = 'SELECT * FROM users WHERE username =:username';
         $statement = $this->db->prepare($query);
-       
         $statement->execute(['username' => $username]);
         $user = $statement->fetch();
         if(empty($user)) {

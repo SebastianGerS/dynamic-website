@@ -261,6 +261,16 @@ class BlogpostModel extends AbstractModel
         
         try {
 
+            $query = 'DELETE FROM blogposts_comments WHERE post_id =:id';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("id", $id);
+            
+            if(!$statement->execute()) 
+            {
+                throw new Exception($statement->errorinfo()[2]);
+            }
+    
+
             $query = 'DELETE FROM blogposts_content WHERE id =:id';
             $statement = $this->db->prepare($query);
             $statement->bindValue("id", $id);

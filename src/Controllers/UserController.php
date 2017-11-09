@@ -47,7 +47,7 @@ class UserController extends AbstractController
        
         
         setcookie('user', $user->getId(), time()+86400);
-        header("Location: /start/logedin");
+        header("Location: /start/logedin/1");
     }
 
     public function logout(): string 

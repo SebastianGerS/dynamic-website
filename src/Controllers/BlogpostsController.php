@@ -17,7 +17,8 @@ class BlogpostsController extends AbstractController
         $coockie = $this->coockie->getInt("user");
         $properties = [
             'blogposts' => $blogposts,
-            'userId' => $coockie
+            'userId' => $coockie,
+            'page' => $page
         ];
 
         return $this->render('views/blogposts.php', $properties);
@@ -96,7 +97,7 @@ class BlogpostsController extends AbstractController
        
         $blogpostModel->insertBlogPostToDb($this->userId, $postName, $content, $tags);
        
-        header("Location: /start/logedin");
+        header("Location: /start/logedin/1");
     }
 
     public function editPostInDatabase() {
@@ -181,7 +182,7 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
        
         $blogposts = $blogpostModel->deletePostFromDb($blogpostId);
-        header("Location: start/logedin");
+        header("Location: start/logedin/1");
        
     }
 

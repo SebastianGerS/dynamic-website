@@ -1,4 +1,7 @@
 <section>
+    <form action=<?php echo "/start/logedin/1"?> method="post">
+        <button> Tillbaka</button>
+    </form>
     <?php  foreach($blogposts as $blogpost): ?>
         <?php if(isset($userId) && !empty($userId) && $userId === $blogpost->getUserId()): ?>
             <form action=<?php echo "/start/logedin/editBlogpost/" . $blogpost->getId() ?> method="get">

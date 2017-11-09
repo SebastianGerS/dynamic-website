@@ -15,11 +15,13 @@
         "controller": "User",
         "method": "logout"
     },
-    "start/logedin": {
+    "start/logedin/:page": {
         "controller": "Blogposts",
-        "method": "getAll",
-        "login": true
-
+        "method": "getAllWithPage",
+        "login": true,
+        "params": {
+            "page": "number"
+        }
     },
     "start/logedin/createBlogposts": {
         "controller": "Default",

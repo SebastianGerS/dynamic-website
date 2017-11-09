@@ -1,12 +1,23 @@
-</section><?php if(!isset($_COOKIE)) {
-    echo '<a href="/start/logedin/createBlogposts"><button>Create new blogpost</button></a>';
-    }?>
 <section>
+    <?php if(isset($_COOKIE)): ?>
+        <form action="/start/logedin/createBlogposts"? method="post">
+            <button> Create new blogpost</button>
+        </form>
+    <?php endif ?>
+    <form action="/start/logedin/<?php echo $page+1 ?>" method="post">
+        <button> Nästa sida</button>
+    </form>
+    <?php if($page !==1): ?>
+    <form action="/start/logedin/<?php echo $page-1 ?>" method="post">
+        <button> Föregående sida</button>
+    </form>
+    <?php endif ?>
+</section>
 
-</section><?php if(isset($errorMessage)): ?> 
+<section><?php if(isset($errorMessage)): ?> 
     <h2 id="errorMessage"><?php echo $errorMessage ?></h2>
     <?php endif ?>
-<section>
+</section>
 
 <section>
 <?php  foreach($blogposts as $blogpost): ?>

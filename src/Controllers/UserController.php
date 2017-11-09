@@ -12,7 +12,7 @@ class UserController extends AbstractController
         if(!$this->request->isPost()) 
         {
             $properties = ['errorMessage' => 'Du måste vara inloggad för att kunna se den här sidan'];
-            return $this->render('views/error.php', $properties);
+            return $this->render('views/start.php', $properties);
         }
         
         $params = $this->request->getParams();

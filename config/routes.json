@@ -98,18 +98,18 @@
         "controller":"User",
         "method": "createUser"
     },
-    "blogposts/:page": {
+    "start/blogposts/:page": {
         "controller": "Blogposts",
         "method": "getAllWithPage",
         "params": {
             "page": "number"
         }
     },
-    "blogposts": {
+    "start/blogposts": {
         "controller": "Blogposts",
         "method": "getAll"
     },
-    "blogpost/:id": {
+    "start/blogpost/:id": {
         "controller": "Blogposts",
         "method": "getBlogpost",
         "params": {

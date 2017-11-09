@@ -27,9 +27,9 @@ abstract class AbstractController
         $this->userId = null;
     }
 
-    protected function render(string $template, array $params): string 
+    protected function render(string $template, array $properties): string 
     {
-        extract($params);
+        extract($properties);
 
         ob_start();
         include $template;

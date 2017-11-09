@@ -5,13 +5,7 @@ class DefaultController extends AbstractController
 {
     public function start(): string
     {
-        
-;        $properties = [
-            'title' => 'Blog bloggen'
-        ];
-      
-
-        return $this->render('views/start.php', $properties);
+        header('location: /start/blogposts');
     }
 
     public function createUserPage():string 
@@ -27,7 +21,7 @@ class DefaultController extends AbstractController
     public function createBlogpostPage():string 
     {   
         $properties =[
-            'title' => 'en blog post'
+            'title' => 'skapa en blog post'
 
         ];
 
@@ -40,7 +34,7 @@ class DefaultController extends AbstractController
         $params = $this->request->getParams();
         $blogpostId = $params->getInt('blogpost_id');
         $properties =[
-            'title' => 'en kommentar',
+            'title' => 'skapa en kommentar',
             'blogpostId' => $blogpostId
 
         ];

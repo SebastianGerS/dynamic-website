@@ -1,4 +1,4 @@
-<section>
-<h2>Du är ej inloggad</h2>
-<p>Ett fel har uppstått: <?php echo $errorMessage ?></p>
+<section id="errorMessage">
+<h1>Hoppsan! Ett fel har uppstått...</h1>
+<h2> <?php echo $errorMessage ?></h2>
 </section>

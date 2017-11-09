@@ -4,6 +4,7 @@ namespace Blog\Core;
 
 use Blog\Controllers\BlogpostsController;
 use Blog\Controllers\UserController;
+use Blog\Controllers\ErrorController;
 
 class Router 
 {

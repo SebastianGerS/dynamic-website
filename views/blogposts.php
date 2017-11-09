@@ -1,28 +1,38 @@
 <section>
     <?php if(isset($_COOKIE[user])): ?>
-        <form action="/start/logedin/createBlogposts"? method="post">
+        <form action="/start/logedin/createBlogposts"? method="get">
             <button> Create new blogpost</button>
         </form>
-    <?php endif ?>
-    <?php if($morePages): ?>
-        <form action="/start/logedin/<?php echo $page+1 ?>" method="post">
-            <button> Nästa sida</button>
-        </form>
-    <?php endif ?>
-    <?php if($page !==1): ?>
-        <form action="/start/logedin/<?php echo $page-1 ?>" method="post">
-            <button> Föregående sida</button>
-        </form>
+        <?php if($morePages): ?>
+            <form action="/start/logedin/<?php echo $page+1 ?>" method="get">
+                <button> Nästa sida</button>
+            </form>
+        <?php endif ?>
+        <?php if($page !==1): ?>
+            <form action="/start/logedin/<?php echo $page-1 ?>" method="get">
+                <button> Föregående sida</button>
+            </form>
+        <?php endif ?>
+    <?php else: ?>
+        <?php if($morePages): ?>
+            <form action="/start/blogposts/<?php echo $page+1 ?>" method="get">
+                <button> Nästa sida</button>
+            </form>
+        <?php endif ?>
+        <?php if($page !==1): ?>
+            <form action="/start/blogposts/<?php echo $page-1 ?>" method="get">
+                <button> Föregående sida</button>
+            </form>
+        <?php endif ?>
     <?php endif ?>
 </section>
-
-<section><?php if(isset($errorMessage)): ?> 
-    <h2 id="errorMessage"><?php echo $errorMessage ?></h2>
-    <?php endif ?>
-</section>
-
+<?php if(isset($errorMessage)): ?> 
+    <section id="errorMessage">
+        <h1><?php echo $errorMessage ?></h1> 
+    </section>
+<?php endif ?>
 <section>
-<?php  foreach($blogposts as $blogpost): ?>
+    <?php  foreach($blogposts as $blogpost): ?>
         <a href=<?php echo '/blogpost/' . $blogpost->getId()?>><article>
             <h1><?php echo $blogpost->getPostName() ?></h1>
             <p><?php echo 'Skapad av: ' . $blogpost->getUsername() ?></p>

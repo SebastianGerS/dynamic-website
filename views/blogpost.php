@@ -28,10 +28,11 @@
                     <p><?php echo 'Datum: ' . $comment->getPostCreationTime() ?></p>
                 </article>
                 <?php if(isset($userId) && !empty($userId) && $userId === $comment->getUserId()): ?>
-                    <form action=<?php echo "/start/logedin/editComment/" . $comment->getId() ?> method="get">
+                    <form action=<?php echo "/start/logedin/editComment/" . $comment->getId() ?> method="post">
                         <button name="comment_id" value=<?php echo $comment->getId()?> >Editera</button>
                     </form>
                     <form action="/deleteCommentFromDB" method="get">
+                        <input name="blogpost_id" type="text" value=<?php  echo $blogpost->getId() ?> required style="display: none;">
                         <button name="comment_id" value=<?php echo $comment->getId()?> >Tabort</button>
                     </form>
                 <?php endif ?>

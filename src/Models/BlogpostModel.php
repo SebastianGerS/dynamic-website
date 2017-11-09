@@ -10,7 +10,7 @@ class BlogpostModel extends AbstractModel
 {
 
     const BLOGPOSTCLASSNAME = '\Blog\Domain\Blogpost';
-    const COMMENTCLASSNAME ='\blog\Domain\Comment';
+    const COMMENTCLASSNAME ='\Blog\Domain\Comment';
 
     public function insertBlogPostToDb(int $userId, string $postName, string $content, array $tags)
     {
@@ -317,6 +317,53 @@ class BlogpostModel extends AbstractModel
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::COMMENTCLASSNAME);
         return $result;
 
+    }
+
+    public function deleteCommentFromDb(int $id)
+    {
+        $query = 'DELETE FROM blogposts_comments WHERE id =:id';
+        $statement = $this->db->prepare($query);
+        $statement->bindValue("id", $id);
+        
+        if(!$statement->execute()) 
+        {
+            throw new Exception($statement->errorinfo()[2]);
+        }
+
+        $statement->execute();
+    }
+
+    public function getComment(int $id)
+    {
+        $query ='SELECT bc.* , u.username FROM blogposts_comments bc LEFT JOIN users u ON u.id = bc.user_id WHERE bc.id = :id';
+        $statement = $this->db->prepare($query);
+        $statement->bindValue('id', $id);
+
+
+        if(!$statement->execute()) 
+        {     
+            throw new Exception($statement->errorinfo()[2]);
+        } 
+
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::COMMENTCLASSNAME);
+        return $result;
+
+    }
+
+    public function editComment(int $id, string $content) 
+    {
+        $query = 'UPDATE blogposts_comments SET content =:content WHERE id =:id';
+        $statement = $this->db->prepare($query);
+        $statement->bindValue('id', $id);
+        $statement->bindValue('content', $content);
+        if (!$statement->execute()) {
+            throw new Exception($statement->errorinfo()[2]);;
+            
+        }
+        
+        $statement->execute();
+    
     }
 }
 ?>

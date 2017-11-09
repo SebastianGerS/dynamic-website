@@ -189,29 +189,32 @@ class BlogpostsController extends AbstractController
     {
         $params = $this->request->getParams();
         $commentId = $params->getInt('comment_id');
+        $blogpostId = $params->getInt('blogpost_id');
        
     
         $blogpostModel = new BlogpostModel();
        
         $blogposts = $blogpostModel->deleteCommentFromDb($commentId);
 
-        header("Location: start/logedin");
+        header("Location: blogpost/$blogpostId");
     }
 
     public function commentEditPage():string 
     {   
+        
         $params = $this->request->getParams();
         $commentId = $params->getInt('comment_id');
        
         $blogpostModel = new BlogpostModel();
-      
-        $comment = $blogpostModel->getcomment($commentId);
+        
+        $comment = $blogpostModel->getComment($commentId);
+        $comment = $comment[0];
         $properties =[
             'title' => 'Här kan du editera dina post',
             'comment' => $comment
 
         ];
-        
+       
         return $this->render('views/commentEditPage.php', $properties);
     }
 
@@ -222,15 +225,17 @@ class BlogpostsController extends AbstractController
 
         
         if (!$params->has('content')) {
-            $params = ['errorMessage' => 'Du får ändra innehållet, men du kan inte ta bort allt innehåll, önskar du ta bort inlägget var god och använd tabort knappen istället'];
+            $params = ['errorMessage' => 'Du får ändra innehållet, men du kan inte ta bort allt innehåll, önskar du ta bort kommentaren var god och använd tabort knappen istället'];
             return $this->render('views/commentEditPage.php', $params);
         }
         $commentId = $params->getInt('comment_id');
         $content = $params->getString('content');
+        $blogpostId = $params->getInt('blogpost_id');
         $blogpostModel = new BlogpostModel();
         
         $blogpostModel->editComment($commentId, $content);
-        header("Location: /blogposts");
+
+        header("Location: /blogpost/$blogpostId");
 
     }
 

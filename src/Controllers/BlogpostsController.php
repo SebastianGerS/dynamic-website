@@ -12,14 +12,26 @@ class BlogpostsController extends AbstractController
     {   
        $page = (int)$page;
        $blogpostModel = new BlogpostModel();
+    
+        $blogposts = $blogpostModel->getBlogpostsByPage($page, self::PAGE_LENGTH);
        
-        $blogposts = $blogpostModel->getAllBlogposts($page, self::PAGE_LENGTH);
+        $allBlogposts = $blogpostModel->getAllBlogposts();
+     
+        $morePages = true;
+
+        if(count($blogposts)*page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
+        {
+            $morePages = false;
+        } 
+        
         $coockie = $this->coockie->getInt("user");
         $properties = [
             'blogposts' => $blogposts,
             'userId' => $coockie,
-            'page' => $page
+            'page' => $page,
+            'morePages' => $morePages
         ];
+
 
         return $this->render('views/blogposts.php', $properties);
     }

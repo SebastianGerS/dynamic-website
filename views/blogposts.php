@@ -4,13 +4,15 @@
             <button> Create new blogpost</button>
         </form>
     <?php endif ?>
-    <form action="/start/logedin/<?php echo $page+1 ?>" method="post">
-        <button> Nästa sida</button>
-    </form>
+    <?php if($morePages): ?>
+        <form action="/start/logedin/<?php echo $page+1 ?>" method="post">
+            <button> Nästa sida</button>
+        </form>
+    <?php endif ?>
     <?php if($page !==1): ?>
-    <form action="/start/logedin/<?php echo $page-1 ?>" method="post">
-        <button> Föregående sida</button>
-    </form>
+        <form action="/start/logedin/<?php echo $page-1 ?>" method="post">
+            <button> Föregående sida</button>
+        </form>
     <?php endif ?>
 </section>
 

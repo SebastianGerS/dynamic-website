@@ -1,5 +1,5 @@
 <section>
-    <?php if(isset($_COOKIE)): ?>
+    <?php if(isset($_COOKIE[user])): ?>
         <form action="/start/logedin/createBlogposts"? method="post">
             <button> Create new blogpost</button>
         </form>

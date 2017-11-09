@@ -257,7 +257,7 @@ class BlogpostsController extends AbstractController
        
         $blogpostModel->insertCommentToDb($this->userId, $blogpostId, $content);
       
-        header("Location: /start/logedin");
+        header("Location: /blogpost/$blogpostId");
     }
 
 }

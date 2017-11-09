@@ -19,7 +19,7 @@ class BlogpostsController extends AbstractController
      
         $morePages = true;
 
-        if(count($blogposts)*page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
+        if(count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
         {
             $morePages = false;
         } 

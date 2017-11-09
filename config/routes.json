@@ -15,6 +15,11 @@
         "controller": "User",
         "method": "logout"
     },
+    "start/logedin": {
+        "controller": "Blogposts",
+        "method": "getAll",
+        "login": true
+    },
     "start/logedin/:page": {
         "controller": "Blogposts",
         "method": "getAllWithPage",

@@ -32,7 +32,11 @@ abstract class AbstractController
         extract($properties);
 
         ob_start();
+        include ($_SERVER['DOCUMENT_ROOT'] . "/templates/head.html");
+        include ( $_SERVER['DOCUMENT_ROOT'] . "/views/header.php");
         include $template;
+        include ($_SERVER['DOCUMENT_ROOT'] . "/templates/footer.html");
+
         $renderedView = ob_get_clean();
 
         return $renderedView;

@@ -19,7 +19,6 @@
     <?php if(!isset($_COOKIE['user'])): ?>
     <div id="login-form">
         <a href="/start/createUser">skapa användare</a>
-        
             <form action="/login" method="post">
                 <input type="text" name="username" placeholder="Användarnamn">
                 <input type="text" name="password" placeholder="Lösenord">

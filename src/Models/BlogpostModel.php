@@ -172,7 +172,7 @@ class BlogpostModel extends AbstractModel
 
     }
 
-    public function getByUser(int $userId, int $page, int $pageLength):array {
+    public function getByUserWithPage(int $userId, int $page, int $pageLength):array {
         $start = $pageLength * ($page-1);
        
         $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.user_id = :id LIMIT :start,:length';
@@ -182,6 +182,18 @@ class BlogpostModel extends AbstractModel
         $statement->bindParam('id', $userId, PDO::PARAM_INT);
         $statement->bindParam('start', $start, PDO::PARAM_INT);
         $statement->bindParam('length', $pageLength, PDO::PARAM_INT);
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
+        return $result;
+
+    }
+    public function getAllByUser(int $userId):array {
+       
+        $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.user_id = :id';
+       
+        $statement = $this->db->prepare($query);
+    
+        $statement->bindParam('id', $userId, PDO::PARAM_INT);
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         return $result;

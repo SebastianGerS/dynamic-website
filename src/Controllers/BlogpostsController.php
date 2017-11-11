@@ -25,11 +25,25 @@ class BlogpostsController extends AbstractController
         } 
         
         $coockie = $this->coockie->getInt("user");
+        $path = $this->request->getPath();
+
+        $path = preg_replace('~\d+~','', $path);
+        
+         if (strrpos($path, '/') === (strlen($path)-1)) 
+         {
+             $path =substr($path, 0, strlen($path)-1);
+         }
+        
+         $nextPage = $path . '/' . ($page+1);
+         $previusPage = $path . '/' . ($page-1);
+      
         $properties = [
             'blogposts' => $blogposts,
             'userId' => $coockie,
             'page' => $page,
-            'morePages' => $morePages
+            'morePages' => $morePages,
+            'nextPage' => $nextPage,
+            'previusPage' => $previusPage
         ];
 
 
@@ -63,10 +77,35 @@ class BlogpostsController extends AbstractController
     public function getByUserWithPage($page): string {
         $page = (int)$page;
         $blogpostModel = new BlogpostModel();
-        $blogposts = $blogpostModel->getByUser($this->userId, $page, self::PAGE_LENGTH);
+      
+        $blogposts = $blogpostModel->getByUserWithPage($this->userId, $page, self::PAGE_LENGTH);
        
+        $allBlogposts = $blogpostModel->getAllByUser($this->userId);
+        $path = $this->request->getPath();
+       
+        $path = preg_replace('~\d+~','', $path);
+       
+        if (strrpos($path, '/') === (strlen($path)-1)) 
+        {
+            $path =substr($path, 0, strlen($path)-1);
+        }
+       
+        $nextPage = $path . '/' . ($page+1);
+        $previusPage = $path . '/' . ($page-1);
+     
+        $morePages = true;
+       
+        if(count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
+        {
+            $morePages = false;
+        } 
+    
         $properties = [
             'blogposts' => $blogposts,
+            'page' => $page,
+            'morePages' => $morePages,
+            'nextPage' => $nextPage,
+            'previusPage' => $previusPage
 
         ];
 
@@ -164,7 +203,7 @@ class BlogpostsController extends AbstractController
 
         if (!$params->has('tagname')) {
             $params = ['errorMessage' => 'skriv in den taggen du vill söka efter'];
-            return $this->render('views/blogposts/.php', $params);
+            return $this->render('views/blogposts.php', $params);
         }
 
         $tagname = $params->getString('tagname');  

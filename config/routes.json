@@ -120,12 +120,12 @@
         "controller": "Blogposts",
         "method": "searchByTagName"
     },
-    "my-blogposts": {
+    "start/logedin/my-blogposts": {
         "controller": "Blogposts",
         "method": "getByUser",
         "login": true
     },
-    "my-blogposts/:page": {
+    "start/logedin/my-blogposts/:page": {
         "controller": "Blogposts",
         "method": "getByUserWithPage",
         "login": true,

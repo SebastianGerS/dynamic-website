@@ -1,29 +1,21 @@
 <section>
     <?php if(isset($_COOKIE[user])): ?>
-        <form action="/start/logedin/createBlogposts"? method="get">
+        <form action="/start/logedin/createBlogposts" method="get">
             <button> Create new blogpost</button>
         </form>
-        <?php if($morePages): ?>
-            <form action="/start/logedin/<?php echo $page+1 ?>" method="get">
-                <button> Nästa sida</button>
-            </form>
-        <?php endif ?>
-        <?php if($page !==1): ?>
-            <form action="/start/logedin/<?php echo $page-1 ?>" method="get">
-                <button> Föregående sida</button>
-            </form>
-        <?php endif ?>
-    <?php else: ?>
-        <?php if($morePages): ?>
-            <form action="/start/blogposts/<?php echo $page+1 ?>" method="get">
-                <button> Nästa sida</button>
-            </form>
-        <?php endif ?>
-        <?php if($page !==1): ?>
-            <form action="/start/blogposts/<?php echo $page-1 ?>" method="get">
-                <button> Föregående sida</button>
-            </form>
-        <?php endif ?>
+        <form action="/start/logedin/my-blogposts" method="get">
+            <button> View my blogposts</button>
+        </form>
+    <?php endif ?>
+    <?php if($morePages): ?>
+        <form action="<?php echo $nextPage ?>" method="get">
+            <button> Nästa sida</button>
+        </form>
+    <?php endif ?>
+    <?php if($page !==1): ?>
+        <form action=<?php echo $previusPage ?> method="get">
+            <button> Föregående sida</button>
+        </form>
     <?php endif ?>
 </section>
 <?php if(isset($errorMessage)): ?> 

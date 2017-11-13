@@ -10,9 +10,10 @@ class BlogpostsController extends AbstractController
 
     public function getAllWithPage($page):string
     {   
+        
        $page = (int)$page;
        $blogpostModel = new BlogpostModel();
-    
+       
         $blogposts = $blogpostModel->getBlogpostsByPage($page, self::PAGE_LENGTH);
        
         $allBlogposts = $blogpostModel->getAllBlogposts();
@@ -35,9 +36,10 @@ class BlogpostsController extends AbstractController
         
          $nextPage = $path . '/' . ($page+1);
          $previusPage = $path . '/' . ($page-1);
-        $properties = [
+
+       
+         $properties = [
             'blogposts' => $blogposts,
-            'user' => $this->user,
             'page' => $page,
             'morePages' => $morePages,
             'path' => substr($path,0,strlen($path)-1),
@@ -65,8 +67,7 @@ class BlogpostsController extends AbstractController
         $properties = [
             'blogpost' => $blogpost,
             'tags'=> $tags,
-            'comments' => $comments,
-            'user' => $this->user
+            'comments' => $comments
         ];
 
         return $this->render('views/blogpost.php', $properties);

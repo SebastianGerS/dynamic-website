@@ -2,10 +2,6 @@
 
 namespace Blog\Core;
 
-use Blog\Controllers\BlogpostsController;
-use Blog\Controllers\UserController;
-use Blog\Controllers\ErrorController;
-
 class Router 
 {
     private $routeMap;
@@ -23,17 +19,18 @@ class Router
     public function route(Request $request): string 
     {
         $path = $request->getPath();
-       
+        
         foreach($this->routeMap as $route => $info) {
             $regexRoute = $this->getRegexRoute($route, $info);
             
             if (preg_match("@^/$regexRoute$@", $path)) {
-               
+                
                 return $this->executeController($route, $path, $info, $request);
             }
            
         }
         $errorController = new ErrorController($request);
+      
         return $errorController->notFound();
     }
 
@@ -54,16 +51,16 @@ class Router
     ): string {
         
         $controllerName = '\Blog\Controllers\\' . $info['controller'] . 'Controller';
-        
-        $controller = new $controllerName($request);
        
+        $controller = new $controllerName($request);
+      
         if (isset($info['login']) && $info ['login']) {
         
             if ($request->getCookies()->has('user')) {
                 $user = $request->getCookies()->get('user');
                 //$controller->setUserId($userId);
                 $controller->setUser(json_decode($user));
-
+                
                
             } else {
                 
@@ -71,8 +68,8 @@ class Router
                 return $errorController->login();
             }
         }
-      
-    
+        
+       
         $params = $this->extractParams($route, $path);
         return call_user_func_array([$controller, $info['method']], $params);
         

@@ -12,7 +12,9 @@ abstract class AbstractController
 
     public function __construct(Request $request)
     {   
+       
         $this->request = $request;   
+       
     }
 
     public function setUser($user) 
@@ -32,17 +34,20 @@ abstract class AbstractController
         $this->user = null;
     }
 
-    protected function render(string $template, array $properties): string 
+    protected function render(string $view, array $properties): string 
     {
+        $user = json_decode($this->request->getCookies()->get('user'));
+        $properties['user'] =  $user;
+
         extract($properties);
 
         ob_start();
-        include ($_SERVER['DOCUMENT_ROOT'] . "/templates/head.html");
-        include ( $_SERVER['DOCUMENT_ROOT'] . "/views/header.php");
-        include $template;
-        include ($_SERVER['DOCUMENT_ROOT'] . "/templates/footer.html");
-
+        include_once ($_SERVER['DOCUMENT_ROOT'] . "/templates/head.html");
+        include_once ( $_SERVER['DOCUMENT_ROOT'] . "/views/header.php");
+            include_once $view;
+        include_once ($_SERVER['DOCUMENT_ROOT'] . "/templates/footer.html");
         $renderedView = ob_get_clean();
+
 
         return $renderedView;
     }

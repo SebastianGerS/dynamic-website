@@ -167,7 +167,7 @@ class BlogpostModel extends AbstractModel
 
         $statement->execute();
 
-        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME)[0];
         return $result;
 
     }

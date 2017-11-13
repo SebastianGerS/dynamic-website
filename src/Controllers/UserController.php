@@ -23,7 +23,7 @@ class UserController extends AbstractController
             return $this->render('views/start.php', $params);
         } else if (!$params->has('password')) {
             
-            $params = ['errorMessage' => 'Du måste fylla i ditt lösenor för att kunna logga in'];
+            $params = ['errorMessage' => 'Du måste fylla i ditt lösenord för att kunna logga in'];
             return $this->render('views/start.php', $params);
            
         }
@@ -35,30 +35,29 @@ class UserController extends AbstractController
        
         try {
             $user = $userModel->getByUsername($username);
+          
             
         } catch (Exception $e) {
             $params = ['errorMessage' => 'Fel användarnamn, försök igen'];
             return $this->render('views/start.php', $params);
         }
 
-        
-        if ($user->getPassword() !== $password) {
+        $dbPassword = $userModel->getPasswordByUsername($username);
+       
+        if ($dbPassword !== $password) {
             $params = ['errorMessage' => 'Felaktigt lösenord'];
             return $this->render('views/start.php', $params);
         }
       
-        
-        setcookie('user', $user->getId(), time()+86400);
-        setcookie('userType', $user->getType(), time()+86400);
-        header("Location: /start/logedin");
+        setcookie('user', json_encode($user), time()+86400);
+        header("Location: /start/logedin/blogposts");
     }
 
     public function logout(): string 
     {
       
-        $this->unsetUserId();
+        $this->unsetUser();
         setcookie('user', "", time() -3600);
-        setcookie('userType', "", time()-3600);
         header("Location: /start");
     }
 
@@ -79,7 +78,7 @@ class UserController extends AbstractController
         $userModel = new userModel();
 
         try {
-            $user = $customerModel->get($customerId);
+            $user = $UserModel->get($userId);
         } catch (\Exception $e) {
             $properties = ['errorMessage' => 'User not found!'];
             return $this->render('views\user.php', $properties);

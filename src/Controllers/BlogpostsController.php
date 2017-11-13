@@ -24,7 +24,6 @@ class BlogpostsController extends AbstractController
             $morePages = false;
         } 
         
-        $coockie = $this->coockie->getInt("user");
         $path = $this->request->getPath();
 
         $path = preg_replace('~\d+~','', $path);
@@ -36,12 +35,12 @@ class BlogpostsController extends AbstractController
         
          $nextPage = $path . '/' . ($page+1);
          $previusPage = $path . '/' . ($page-1);
-      
         $properties = [
             'blogposts' => $blogposts,
-            'userId' => $coockie,
+            'user' => $this->user,
             'page' => $page,
             'morePages' => $morePages,
+            'path' => substr($path,0,strlen($path)-1),
             'nextPage' => $nextPage,
             'previusPage' => $previusPage
         ];
@@ -61,14 +60,13 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
         
         $tags = $blogpostModel->getTagsformPost($id);
-        $blogposts = $blogpostModel->getBlogpost($id);
+        $blogpost = $blogpostModel->getBlogpost($id);
         $comments = $blogpostModel->getComments($id);
-        $coockie = $this->coockie->getInt("user");
         $properties = [
-            'blogposts' => $blogposts,
+            'blogpost' => $blogpost,
             'tags'=> $tags,
             'comments' => $comments,
-            'userId' => $coockie
+            'user' => $this->user
         ];
 
         return $this->render('views/blogpost.php', $properties);
@@ -78,9 +76,9 @@ class BlogpostsController extends AbstractController
         $page = (int)$page;
         $blogpostModel = new BlogpostModel();
       
-        $blogposts = $blogpostModel->getByUserWithPage($this->userId, $page, self::PAGE_LENGTH);
+        $blogposts = $blogpostModel->getByUserWithPage($this->user->getId(), $page, self::PAGE_LENGTH);
        
-        $allBlogposts = $blogpostModel->getAllByUser($this->userId);
+        $allBlogposts = $blogpostModel->getAllByUser($this->user->getId());
         $path = $this->request->getPath();
        
         $path = preg_replace('~\d+~','', $path);
@@ -146,7 +144,7 @@ class BlogpostsController extends AbstractController
         
         $blogpostModel = new BlogpostModel();
        
-        $blogpostModel->insertBlogPostToDb($this->userId, $postName, $content, $tags);
+        $blogpostModel->insertBlogPostToDb($$this->user->getId(), $postName, $content, $tags);
        
         header("Location: /start/logedin/1");
     }

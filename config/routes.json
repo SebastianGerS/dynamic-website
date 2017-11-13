@@ -15,12 +15,12 @@
         "controller": "User",
         "method": "logout"
     },
-    "start/logedin": {
+    "start/logedin/blogposts": {
         "controller": "Blogposts",
         "method": "getAll",
         "login": true
     },
-    "start/logedin/:page": {
+    "start/logedin/blogposts/:page": {
         "controller": "Blogposts",
         "method": "getAllWithPage",
         "login": true,
@@ -112,6 +112,14 @@
     "start/blogpost/:id": {
         "controller": "Blogposts",
         "method": "getBlogpost",
+        "params": {
+            "id": "number"
+        }
+    },
+    "start/logedin/blogpost/:id": {
+        "controller": "Blogposts",
+        "method": "getBlogpost",
+        "login": true,
         "params": {
             "id": "number"
         }

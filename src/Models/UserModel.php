@@ -94,10 +94,26 @@ class UserModel extends AbstractModel
             $user['firstname'],
             $user['surname'],
             $user['username'],
-            $user['password'],
             $user['email']
 
         );
+    }
+
+    public function getPasswordByUsername(string $username): string
+    {
+       
+        $query = 'SELECT password FROM users WHERE username =:username';
+       
+        $statement = $this->db->prepare($query);
+        $statement->execute(['username' => $username]);
+        $password = $statement->fetch()['password'];
+
+        if(empty($password)) {
+            
+            throw new NotFoundException();
+        }
+      
+        return $password;
     }
 
 }

@@ -2,29 +2,34 @@
 namespace Blog\Controllers;
 
 use Blog\Core\Request;
+use Blog\Domain\User;
 
 abstract class AbstractController
 {
     protected $request;
     protected $view;
-    protected $userId;
-    protected $coockie;
+    protected $user;
 
     public function __construct(Request $request)
     {   
-        $this->request = $request;
-        
-        $this->coockie = $this->request->getCookies();
+        $this->request = $request;   
     }
 
-    public function setUserId(int $userId) 
+    public function setUser($user) 
     {
-        $this->userId = $userId;
+        $this->user = new User(
+            $user->type,
+            $user->id,
+            $user->firstname,
+            $user->surname,
+            $user->username,
+            $user->email
+        );
     }
 
-    public function unsetUserId() 
+    public function unsetUser() 
     {
-        $this->userId = null;
+        $this->user = null;
     }
 
     protected function render(string $template, array $properties): string 

@@ -31,4 +31,21 @@
         <?php endif ?>
     <div>
 </header>
+<nav> 
+    <?php if(isset($_COOKIE['user'])): ?>
+        <form action="/start/logedin/createBlogposts" method="get">
+            <button> Create new blogpost</button>
+        </form>
+        <form action="/start/logedin/my-blogposts" method="get">
+            <button> View my blogposts</button>
+        </form>
+    <?php endif ?>
+</nav>
+</section>
+<?php if(isset($errorMessage)): ?> 
+    <section id="errorMessage">
+        <h1><?php echo $errorMessage ?></h1> 
+    </section>
+<?php endif ?>
+<section>
 <body>

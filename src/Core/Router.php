@@ -60,8 +60,10 @@ class Router
         if (isset($info['login']) && $info ['login']) {
         
             if ($request->getCookies()->has('user')) {
-                $userId = $request->getCookies()->get('user');
-                $controller->setUserId($userId);
+                $user = $request->getCookies()->get('user');
+                //$controller->setUserId($userId);
+                $controller->setUser(json_decode($user));
+
                
             } else {
                 

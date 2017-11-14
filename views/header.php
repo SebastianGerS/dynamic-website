@@ -13,9 +13,9 @@
             <button type="submit"> Sök!</button>
         </div>
         <div id="hashtags">
-            <button>#programmering</button>
-            <button>#musik</button>
-            <button>#Tv-serier</button>    
+            <button><?php echo $toptag1 ?></button>
+            <button><?php echo $toptag2 ?></button>
+            <button><?php echo $toptag3 ?></button>    
         </div>
     </form>
     </div>

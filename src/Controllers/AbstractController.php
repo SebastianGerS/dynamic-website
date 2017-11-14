@@ -3,7 +3,7 @@ namespace Blog\Controllers;
 
 use Blog\Core\Request;
 use Blog\Domain\User;
-
+use Blog\Models\BlogpostModel;
 abstract class AbstractController
 {
     protected $request;
@@ -36,7 +36,17 @@ abstract class AbstractController
 
     protected function render(string $view, array $properties): string 
     {
+        
         $user = json_decode($this->request->getCookies()->get('user'));
+        $blogpostModel = new BlogpostModel();
+        
+        $toptags = $blogpostModel->topTags();
+        $id = 1;
+        foreach($toptags as $tag) {
+            $properties["toptag$id"] = $tag["tagname"];
+            $id++;
+        }
+        
         $properties['user'] =  $user;
       
         extract($properties);

@@ -554,5 +554,24 @@ class BlogpostModel extends AbstractModel
         $statement->execute();
     
     }
+    public function topTags() : array
+    {
+        
+        $query = 'SELECT DISTINCT t.*, COUNT(ptc.tag_id) AS count FROM tags t LEFT JOIN post_tag_correspondens ptc ON ptc.tag_id = t.id GROUP BY t.tagname ORDER BY count DESC LIMIT 3';
+        $statement = $this->db->prepare($query);
+       
+
+        if (!$statement->execute()) {
+            throw new Exception($statement->errorinfo()[2]);;
+            
+        }
+       
+        $statement->execute();
+
+        $result = $statement->fetchAll();
+
+        return $result;
+        
+    }
 }
 ?>

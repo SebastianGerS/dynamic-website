@@ -4,9 +4,12 @@
     </div>
     <div id="center-header">
     <h1>Välkommen till bloggen!</h1>
-    <form id=search-form action="/blogposts/search" method="get">
+    <form id=search-form action="/blogposts/search/1" method="get">
         <div>
-            <input type=text placeholder="type your search"  name="tagname">
+            <input type=text placeholder="type your search"  name="search">
+            <input type="checkbox" name="tags" value="true" checked>
+            <input type="checkbox" name="post_name" value="true">
+            <input type="checkbox" name="content" value="true">
             <button type="submit"> Sök!</button>
         </div>
         <div id="hashtags">
@@ -16,7 +19,7 @@
         </div>
     </form>
     </div>
-    <?php if(!isset($_COOKIE['user'])): ?>
+    <?php if(!isset($user)): ?>
     <div id="login-form">
         <a href="/start/createUser">skapa användare</a>
             <form action="/login" method="post">
@@ -32,7 +35,7 @@
     <div>
 </header>
 <nav> 
-    <?php if(isset($_COOKIE['user'])): ?>
+    <?php if(isset($user)): ?>
         <form action="/start/logedin/createBlogposts" method="get">
             <button> Create new blogpost</button>
         </form>

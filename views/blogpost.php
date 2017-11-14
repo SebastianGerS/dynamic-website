@@ -2,7 +2,7 @@
     <form action=<?php echo "/start/logedin/blogposts"?> method="post">
         <button> Tillbaka</button>
     </form>
-    <?php if(isset($user) && $user->getId() === $blogpost->getUserId()|| $user->getType() === "admin" ): ?>
+    <?php if(isset($user) && $user->id == $blogpost->getUserId()|| $user->type === "admin" ): ?>
         <form action=<?php echo "/start/logedin/editBlogpost/" . $blogpost->getId() ?> method="get">
             <button name="blogpost_id" value=<?php echo $blogpost->getId()?> >Editera inlägget</button>
         </form>
@@ -29,7 +29,7 @@
                 <p><?php echo 'Kommentar av: ' . $comment->getUsername() ?></p>
                 <p><?php echo 'Datum: ' . $comment->getPostCreationTime() ?></p>
             </article>
-            <?php if(isset($user) && $user->getId() === $comment->getUserId() || $user->getType() === "admin" ): ?>
+            <?php if(isset($user) && $user->id == $comment->getUserId() || $user->type === "admin" ): ?>
                 <form action=<?php echo "/start/logedin/editComment/" . $comment->getId() ?> method="post">
                     <button name="comment_id" value=<?php echo $comment->getId()?> >Editera</button>
                 </form>

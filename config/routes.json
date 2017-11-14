@@ -124,9 +124,12 @@
             "id": "number"
         }
     },
-    "blogposts/search": {
+    "blogposts/search/:page": {
         "controller": "Blogposts",
-        "method": "searchByTagName"
+        "method": "search",
+        "params": {
+            "page": "number"
+        }
     },
     "start/logedin/my-blogposts": {
         "controller": "Blogposts",

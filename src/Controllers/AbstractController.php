@@ -38,7 +38,7 @@ abstract class AbstractController
     {
         $user = json_decode($this->request->getCookies()->get('user'));
         $properties['user'] =  $user;
-
+      
         extract($properties);
 
         ob_start();

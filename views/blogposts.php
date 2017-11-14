@@ -4,7 +4,7 @@
             <button> Nästa sida</button>
         </form>
     <?php endif ?>
-    <?php if($page !==1): ?>
+    <?php if(isset($page) && $page !==1): ?>
         <form action=<?php echo $previusPage ?> method="get">
             <button> Föregående sida</button>
         </form>
@@ -16,7 +16,7 @@
             <p><?php echo 'Datum: ' . $blogpost->getPostCreationTime() ?></p>
             <p><?php echo substr($blogpost->getContent(), 0, 25) ?></p>
         </article></a>
-        <?php if(isset($user) && $user->getId() === $blogpost->getUserId()|| $user->getType() === "admin" ): ?>
+        <?php if(isset($user) && $user->id == $blogpost->getUserId()|| $user->type == "admin" ): ?>
         <form action=<?php echo "logedin/editBlogpost/" . $blogpost->getId() ?> method="get">
             <button name="blogpost_id" value=<?php echo $blogpost->getId()?> >editera inlägget</button>
         </form>
@@ -24,5 +24,6 @@
                 <button name="blogpost_id" value=<?php echo $blogpost->getId()?> >tabort inlägget</button>
         </form>
         <?php endif ?>
+       
     <?php endforeach ?>
 </section>

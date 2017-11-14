@@ -6,14 +6,14 @@ use Blog\Models\BlogpostModel;
 class BlogpostsController extends AbstractController 
 {
 
-    const PAGE_LENGTH = 5;
+    const PAGE_LENGTH = 3;
 
     public function getAllWithPage($page):string
     {   
         
        $page = (int)$page;
        $blogpostModel = new BlogpostModel();
-       
+
         $blogposts = $blogpostModel->getBlogpostsByPage($page, self::PAGE_LENGTH);
        
         $allBlogposts = $blogpostModel->getAllBlogposts();
@@ -125,6 +125,8 @@ class BlogpostsController extends AbstractController
         
 
         $params = $this->request->getParams();
+
+       
       
         if (!$params->has('post_name')) {
             $params = ['errorMessage' => 'Du måste ge dit inlägg en titel'];
@@ -141,13 +143,15 @@ class BlogpostsController extends AbstractController
         
         $postName = $params->getString('post_name');
         $content = $params->getString('content');
-        $tags = explode(" ", $params->getString('tagname'));
-        
+       
+
+        $tags = explode(" ", trim($params->getString('tagname')));
+       
         $blogpostModel = new BlogpostModel();
        
-        $blogpostModel->insertBlogPostToDb($$this->user->getId(), $postName, $content, $tags);
+        $blogpostModel->insertBlogPostToDb($this->user->getId(), $postName, $content, $tags);
        
-        header("Location: /start/logedin/1");
+        header("Location: /start/logedin/blogposts");
     }
 
     public function editPostInDatabase() {
@@ -195,29 +199,79 @@ class BlogpostsController extends AbstractController
         return $this->render('views/blogpostEditPage.php', $properties);
     }
 
-    public function searchByTagName() {
+    public function search($page) {
        
+        $page = (int) $page;
 
         $params = $this->request->getParams();
-
-        if (!$params->has('tagname')) {
+      
+        if (!$params->has('search')) {
             $params = ['errorMessage' => 'skriv in den taggen du vill söka efter'];
             return $this->render('views/blogposts.php', $params);
         }
 
-        $tagname = $params->getString('tagname');  
-
-        $blogpostModel = new BlogpostModel();
+        $search = $params->getString('search');
         
-        $blogposts = $blogpostModel->searchByTagName($tagname);
+        $blogpostModel = new BlogpostModel();
+        if ($params->has('tags') && $params->has('post_name') && $params->has('content')) {
+            $blogposts = $blogpostModel->searchByTagsPostAndContent($search, $page, self::PAGE_LENGTH);
+            $allBlogposts = $blogpostModel->searchByTagsPostAndContent($search);
+        } else if ($params->has('tags') && $params->has('post_name')) {
+            $blogposts = $blogpostModel->searchByTagsAndPost($search,$page, self::PAGE_LENGTH);
+            $allBlogposts = $blogpostModel->searchByTagsAndPost($search);
+        } else if($params->has('post_name') && $params->has('content')) {
+            $blogposts = $blogpostModel->searchByPostAndContent($search,$page, self::PAGE_LENGTH);
+            $allBlogposts = $blogpostModel->searchByPostAndContent($search);
+        } else if($params->has('tags') && $params->has('content')) {
+            $blogposts = $blogpostModel->searchByTagsAndContent($search,$page, self::PAGE_LENGTH);
+            $allBlogposts = $blogpostModel->searchByTagsAndContent($search);
+        } else if ($params->has('tags')) {
+       
+            $blogposts = $blogpostModel->searchByTags($search, $page, self::PAGE_LENGTH);
+            $allBlogposts = $blogpostModel->searchByTags($search);
+          
+        } else if($params->has('post_name')) {
+            $blogposts = $blogpostModel->searchByPost($search,$page, self::PAGE_LENGTH);
+            $allBlogposts = $blogpostModel->searchByPost($search);
+        } else if($params->has('content')) {
+            $blogposts = $blogpostModel->searchByContent($search,$page, self::PAGE_LENGTH);
+            $allBlogposts = $blogpostModel->searchByContent($search);
+        } else  {
+            $params = ['errorMessage' => 'du måste välja vad du vill söka efter'];
+            return $this->render('views/blogposts.php', $params);
+        }
+
        if (empty($blogposts)) {
         $params = ['errorMessage' => 'inga sökningar med angivna parametrar hittades'];
         return $this->render('views/blogposts.php', $params);
        }
+
+       $path = $this->request->getPath();
+       
+        $path = preg_replace('~\d+~','', $path);
+       
+        if (strrpos($path, '/') === (strlen($path)-1)) 
+        {
+            $path =substr($path, 0, strlen($path)-1);
+        }
+       
+        $nextPage = $path . '/' . ($page+1);
+        $previusPage = $path . '/' . ($page-1);
+     
+        $morePages = true;
+       
+        if(count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
+        {
+            $morePages = false;
+        } 
       
         $properties =[
             'title' => 'Här kan du editera dina post',
-            'blogposts' => $blogposts
+            'blogposts' => $blogposts,
+            'morePages' => $morePages,
+            'nextPage' => $nextPage,
+            'previusPage' => $previusPage
+
         ];
         return $this->render('views/blogposts.php', $properties);
     }

@@ -9,6 +9,7 @@ class Blogpost {
     private $username;
     private $post_name;
     private $post_creation_time;
+    private $post_edit_time;
     private $content;
 
     public function getId(): int {
@@ -27,6 +28,10 @@ class Blogpost {
     }
 
     public function getPostCreationTime(): string {
+        return $this->post_creation_time;
+    }
+
+    public function getEditTime(): string {
         return $this->post_creation_time;
     }
 

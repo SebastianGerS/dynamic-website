@@ -6,7 +6,7 @@
     <h1>Välkommen till bloggen!</h1>
     <form id=search-form action="/blogposts/search/1" method="get">
         <div>
-            <input type=text placeholder="type your search"  name="search">
+            <input id="searchfield" type=text placeholder="type your search"  name="search">
             <input type="checkbox" name="tags" value="true" checked>
             <input type="checkbox" name="post_name" value="true">
             <input type="checkbox" name="content" value="true">

@@ -283,11 +283,22 @@ class BlogpostModel extends AbstractModel
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         return $result;
     }
-    public function searchByPost(string $postName) {
+    public function searchByPost(string $postName, int $page = null, int $pageLength = null) {
+        if (isset($page)) {
         
-        $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name  LIKE :post_name';
-        $statement = $this->db->prepare($query);
-        $statement->bindValue("post_name", "%$postName%");
+            $start = ($page -1) * $pageLength;
+
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name  LIKE :post_name LIMIT :start, :length';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("post_name", "%$postName%");
+            $statement->bindValue("start", $start, PDO::PARAM_INT);
+            $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
+        } else {
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name  LIKE :post_name';
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("post_name", "%$postName%");
+        } 
+       
         if(!$statement->execute()) 
         {
             throw new Exception($statement->errorinfo()[2]);
@@ -298,14 +309,30 @@ class BlogpostModel extends AbstractModel
         return $result;
     }
 
-    public function searchByContent(string $content) {
-        $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content';
-    
-        $statement = $this->db->prepare($query);
-        $statement->bindValue("content", "%$content%", PDO::PARAM_STR);
+    public function searchByContent(string $content, int $page = null, int $pageLength = null) {
 
-        if(!$statement->execute()) 
-        {
+        if (isset($page)) {
+            
+            $start = ($page -1) * $pageLength;
+
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content LIMIT :start, :length';
+            
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("content", "%$content%", PDO::PARAM_STR);
+            $statement->bindValue("start", $start, PDO::PARAM_INT);
+            $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
+    
+        } else {
+
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content';
+        
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("content", "%$content%", PDO::PARAM_STR);
+        }
+
+        if(!$statement->execute()) {
             throw new Exception($statement->errorinfo()[2]);
         }
 
@@ -317,7 +344,7 @@ class BlogpostModel extends AbstractModel
         return $result;
     }
 
-    public function searchByTagsAndContent(string $search) {
+    public function searchByTagsAndContent(string $search, int $page = null, int $pageLength = null) {
 
         $query = 'SELECT id FROM tags WHERE tagname =:tagname';
         $statement = $this->db->prepare($query);
@@ -325,14 +352,30 @@ class BlogpostModel extends AbstractModel
         $statement->execute();
         $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
 
-        $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  ptc.tag_id = :tag_id';
-    
-        $statement = $this->db->prepare($query);
-        $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
-        $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
+        if (isset($page)) {
+            
+            $start = ($page -1) * $pageLength;
 
-        if(!$statement->execute()) 
-        {
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  ptc.tag_id = :tag_id LIMIT :start, :length';
+        
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
+            $statement->bindValue("start", $start, PDO::PARAM_INT);
+            $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
+
+        } else {
+
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  ptc.tag_id = :tag_id';
+            
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
+        }
+
+        if(!$statement->execute()) {
             throw new Exception($statement->errorinfo()[2]);
         }
 
@@ -344,13 +387,72 @@ class BlogpostModel extends AbstractModel
         return $result;
     }
 
-    public function searchByPostAndContent (string $search) {
+    public function searchByPostAndContent (string $search, int $page = null, int $pageLength = null) {
+
+        if (isset($page)) {
+            
+            $start = ($page -1) * $pageLength;
+
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  bi.post_name LIKE :post_name LIMIT :start, :length';
+            
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("start", $start, PDO::PARAM_INT);
+            $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
+        } else {
+            
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  bi.post_name LIKE :post_name';
         
-        $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  bi.post_name LIKE :post_name';
-    
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
+        }
+        if(!$statement->execute()) 
+        {
+            throw new Exception($statement->errorinfo()[2]);
+        }
+
+        $statement->execute();
+        
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
+
+        
+        return $result;
+    }
+
+    public function searchByTagsAndPost (string $search, int $page = null, int $pageLength = null) {
+
+        $query = 'SELECT id FROM tags WHERE tagname =:tagname';
         $statement = $this->db->prepare($query);
-        $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
-        $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
+        $statement->bindValue("tagname", $search);
+        $statement->execute();
+        $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
+
+        if (isset($page)) {
+            
+            $start = ($page -1) * $pageLength;
+
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR ptc.tag_id = :tag_id LIMIT :start, :length';
+            
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
+            $statement->bindValue("start", $start, PDO::PARAM_INT);
+            $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
+
+        } else {
+
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR ptc.tag_id = :tag_id';
+
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
+        }
 
         if(!$statement->execute()) 
         {
@@ -364,49 +466,38 @@ class BlogpostModel extends AbstractModel
         
         return $result;
     }
-    public function searchByTagsAndPost (string $search) {
 
+    public function searchByTagsPostAndContent (string $search, int $page = null, int $pageLength = null) {
+        
         $query = 'SELECT id FROM tags WHERE tagname =:tagname';
         $statement = $this->db->prepare($query);
         $statement->bindValue("tagname", $search);
         $statement->execute();
         $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
 
-        
-        $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR  ptc.tag_id = :tag_id';
-    
-        $statement = $this->db->prepare($query);
-        $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
-        $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
+        if (isset($page)) {
+            
+            $start = ($page -1) * $pageLength;
 
-        if(!$statement->execute()) 
-        {
-            throw new Exception($statement->errorinfo()[2]);
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR bc.content LIKE :content OR ptc.tag_id = :tag_id LIMIT :start, :length';
+            
+            $statement = $this->db->prepare($query);
+
+            $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
+            $statement->bindValue("start", $start, PDO::PARAM_INT);
+            $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
+
+        } else {
+
+            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR bc.content LIKE :content OR ptc.tag_id = :tag_id';
+
+            $statement = $this->db->prepare($query);
+            $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
+            $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
         }
-
-        $statement->execute();
-        
-        $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
-
-        
-        return $result;
-    }
-
-    public function searchByTagsPostAndContent (string $search) {
-        
-        $query = 'SELECT id FROM tags WHERE tagname =:tagname';
-        $statement = $this->db->prepare($query);
-        $statement->bindValue("tagname", $search);
-        $statement->execute();
-        $tagId = $statement->fetch(PDO::FETCH_NUM)[0];
-
-      
-        $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR bc.content LIKE :content OR ptc.tag_id = :tag_id';
-
-        $statement = $this->db->prepare($query);
-        $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
-        $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
-        $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
 
         if(!$statement->execute()) 
         {

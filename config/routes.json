@@ -144,6 +144,15 @@
             "page": "number"
         }
 
+    },
+    "start/logedin/my-blogpost/:id": {
+        "controller": "Blogposts",
+        "method": "getBlogpost",
+        "login": true,
+        "params": {
+            "id": "number"
+        }
+
     }
     
 

@@ -1,7 +1,7 @@
 <section>
     <?php if($morePages): ?>
         <form action="<?php echo $nextPage ?>" method="get">
-            <button> Nästa sida</button>
+            <button name="same_search" value ="true"> Nästa sida</button>
         </form>
     <?php endif ?>
     <?php if(isset($page) && $page !==1): ?>

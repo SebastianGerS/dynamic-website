@@ -104,7 +104,8 @@ class BlogpostsController extends AbstractController
             'page' => $page,
             'morePages' => $morePages,
             'nextPage' => $nextPage,
-            'previusPage' => $previusPage
+            'previusPage' => $previusPage,
+            'path' => substr($path,0,strlen($path)-1),
 
         ];
 
@@ -205,37 +206,48 @@ class BlogpostsController extends AbstractController
 
         $params = $this->request->getParams();
       
-        if (!$params->has('search')) {
+        if(!$params->has('search') && isset($_COOKIE['search'])) {
+            $search = $_COOKIE['search'];
+
+            
+        } else if(!$params->has('search')) {
             $params = ['errorMessage' => 'skriv in den taggen du vill söka efter'];
             return $this->render('views/blogposts.php', $params);
-        }
+        } else {
 
-        $search = $params->getString('search');
-        
+            $search = $params->getString('search');
+            setcookie("search_type", "", time()-3600);
+        }
+    
         $blogpostModel = new BlogpostModel();
-        if ($params->has('tags') && $params->has('post_name') && $params->has('content')) {
+        if ($params->has('tags') && $params->has('post_name') && $params->has('content') || $_COOKIE['search_type'] == 6) {
             $blogposts = $blogpostModel->searchByTagsPostAndContent($search, $page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTagsPostAndContent($search);
-        } else if ($params->has('tags') && $params->has('post_name')) {
+            setcookie("search_type", 6, time() + 3600);
+        } else if ($params->has('tags') && $params->has('post_name') || $_COOKIE['search_type'] == 5) {
             $blogposts = $blogpostModel->searchByTagsAndPost($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTagsAndPost($search);
-        } else if($params->has('post_name') && $params->has('content')) {
+            setcookie("search_type", 5, time() + 3600);
+        } else if($params->has('post_name') && $params->has('content') || $_COOKIE['search_type'] == 4) {
             $blogposts = $blogpostModel->searchByPostAndContent($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByPostAndContent($search);
-        } else if($params->has('tags') && $params->has('content')) {
+            setcookie("search_type", 4, time() + 3600);
+        } else if($params->has('tags') && $params->has('content') || $_COOKIE['search_type'] == 3) {
             $blogposts = $blogpostModel->searchByTagsAndContent($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTagsAndContent($search);
-        } else if ($params->has('tags')) {
-       
+            setcookie("search_type", 3, time() + 3600);
+        } else if ($params->has('tags') || $_COOKIE['search_type'] == 2) {
             $blogposts = $blogpostModel->searchByTags($search, $page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTags($search);
-          
-        } else if($params->has('post_name')) {
+            setcookie("search_type", 2, time() + 3600);
+        } else if($params->has('post_name') || $_COOKIE['search_type'] == 1) {
             $blogposts = $blogpostModel->searchByPost($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByPost($search);
-        } else if($params->has('content')) {
+            setcookie("search_type", 1, time() + 3600);
+        } else if($params->has('content') || $_COOKIE['search_type'] == 0) {
             $blogposts = $blogpostModel->searchByContent($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByContent($search);
+            setcookie("search_type", 0, time() + 3600);
         } else  {
             $params = ['errorMessage' => 'du måste välja vad du vill söka efter'];
             return $this->render('views/blogposts.php', $params);
@@ -264,15 +276,23 @@ class BlogpostsController extends AbstractController
         {
             $morePages = false;
         } 
+
+        if(strpos($path,"search") !== false) {
+            $path = "/start/blogpost";
+        }
       
         $properties =[
             'title' => 'Här kan du editera dina post',
             'blogposts' => $blogposts,
             'morePages' => $morePages,
             'nextPage' => $nextPage,
-            'previusPage' => $previusPage
+            'previusPage' => $previusPage,
+            'page' => $page,
+            'path' => $path
 
         ];
+
+        setcookie("search", $search, time() + 3600);
         return $this->render('views/blogposts.php', $properties);
     }
 

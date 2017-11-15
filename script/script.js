@@ -3,8 +3,8 @@ var  hashtags;
 var searchfield;
 
 var init = function() {
-    hashtags = Document.querySelectorAll("#hastags button");
-    searchfield = Document.querySelector("#searchfield");
+    hashtags = document.querySelectorAll("#hastags  button");
+    searchfield = document.querySelector("#searchfield");
     for (var hashtag of hastags) {
         hashtag.addEventListener("click", pushToSearch);
     }

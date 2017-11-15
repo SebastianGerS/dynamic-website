@@ -565,7 +565,6 @@ class BlogpostModel extends AbstractModel
 
     public function insertCommentToDb(int $userId, int $blogpostId, string $content)
     {
-      
         $query = 'INSERT INTO blogposts_comments(post_id, content, user_id, post_creation_time) VALUES (:post_id, :content, :user_id, NOW())';
         $statement = $this->db->prepare($query);
         $statement->bindValue('post_id', $blogpostId);

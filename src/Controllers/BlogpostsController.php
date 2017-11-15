@@ -6,7 +6,7 @@ use Blog\Models\BlogpostModel;
 class BlogpostsController extends AbstractController 
 {
 
-    const PAGE_LENGTH = 1;
+    const PAGE_LENGTH = 5;
 
     public function getAllWithPage($page):string
     {   
@@ -15,7 +15,7 @@ class BlogpostsController extends AbstractController
        $blogpostModel = new BlogpostModel();
 
         $blogposts = $blogpostModel->getBlogpostsByPage($page, self::PAGE_LENGTH);
-       
+        
         $allBlogposts = $blogpostModel->getAllBlogposts();
      
         $morePages = true;
@@ -46,7 +46,7 @@ class BlogpostsController extends AbstractController
             'nextPage' => $nextPage,
             'previusPage' => $previusPage
         ];
-
+        
 
         return $this->render('views/blogposts.php', $properties);
     }
@@ -185,14 +185,14 @@ class BlogpostsController extends AbstractController
     {   
         $params = $this->request->getParams();
         $blogpostId = $params->getInt('blogpost_id');
-       
+      
         $blogpostModel = new BlogpostModel();
         $tags = $blogpostModel->getTagsformPost($blogpostId);
       
-        $blogposts = $blogpostModel->getBlogpost($blogpostId);
+        $blogpost = $blogpostModel->getBlogpost($blogpostId);
         $properties =[
             'title' => 'Här kan du editera dina post',
-            'blogposts' => $blogposts,
+            'blogpost' => $blogpost,
             'tags'=> $tags
 
         ];
@@ -311,7 +311,7 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
        
         $blogposts = $blogpostModel->deletePostFromDb($blogpostId);
-        header("Location: start/logedin/1");
+        header("Location: start/logedin/blogposts");
        
     }
 
@@ -384,9 +384,8 @@ class BlogpostsController extends AbstractController
         $blogpostId = $params->getInt('blogpost_id');
      
         $blogpostModel = new BlogpostModel();
-       
-        $blogpostModel->insertCommentToDb($this->userId, $blogpostId, $content);
-      
+    
+        $blogpostModel->insertCommentToDb($this->user->getId(), $blogpostId, $content);
         header("Location: /start/blogpost/$blogpostId");
     }
 

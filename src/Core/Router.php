@@ -1,7 +1,7 @@
 <?php
 
 namespace Blog\Core;
-
+use Blog\Controllers\ErrorController;
 class Router 
 {
     private $routeMap;
@@ -58,7 +58,6 @@ class Router
         
             if ($request->getCookies()->has('user')) {
                 $user = $request->getCookies()->get('user');
-                //$controller->setUserId($userId);
                 $controller->setUser(json_decode($user));
                 
                

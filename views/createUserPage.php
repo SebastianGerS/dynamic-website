@@ -7,7 +7,7 @@
             <input class="form-control my-3"name="email" type="text" placeholder="Epost" required>
             <input class="form-control my-3"name="username" type="text" placeholder="Användarnamn" required>
             <input class="form-control my-3"name="password" type="text" placeholder="Lösenord" required>
-            <buttonclass="btn btn-success" type="submit">Skapa användare</button>
+            <button class="btn btn-success" type="submit">Skapa användare</button>
         </form>  
     </article>
 </div>

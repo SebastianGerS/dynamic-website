@@ -150,27 +150,6 @@ class BlogpostModel extends AbstractModel
         return $result;
     }
 
-    /*public function getTagsformPost(int $id)
-    {
-        $query = 'SELECT t.tagname FROM tags t LEFT JOIN post_tag_correspondens ptc ON t.id = ptc.tag_id LEFT JOIN blogposts_info bi ON ptc.post_id = bi.id WHERE bi.id =:id';
-        $statement = $this->db->prepare($query);
-        $statement->bindParam('id', $id, PDO::PARAM_INT);
-
-        $statement->execute();
-
-        $tags = $statement->fetchAll();
-        $result = "";
-        foreach($tags as $tag)
-        {
-            $result .=  $tag['tagname'] . " ";
-          
-        }
-        
-        $result = trim($result);
-    
-        return $result;
-    }*/
-
     public function getBlogpost(int $id) 
     {
         $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bc.id =:id GROUP BY bi.id';
@@ -266,15 +245,14 @@ class BlogpostModel extends AbstractModel
          
             $start = ($page -1) * $pageLength;
            
-            $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE ptc.tag_id =:tag_id LIMIT :start, :length';
-         
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE ptc.tag_id =:tag_id GROUP BY bi.id LIMIT :start, :length';
             $statement = $this->db->prepare($query);
             $statement->bindValue("tag_id", $tagId, PDO::PARAM_INT);
             $statement->bindValue("start", $start, PDO::PARAM_INT);
             $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
            
         } else {
-            $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE ptc.tag_id =:tag_id';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE ptc.tag_id =:tag_id GROUP BY bi.id';
             $statement = $this->db->prepare($query);
             $statement->bindValue("tag_id", $tagId);
         }
@@ -293,14 +271,13 @@ class BlogpostModel extends AbstractModel
         if (isset($page)) {
         
             $start = ($page -1) * $pageLength;
-
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name  LIKE :post_name LIMIT :start, :length';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bi.post_name  LIKE :post_name GROUP BY bi.id LIMIT :start, :length';
             $statement = $this->db->prepare($query);
             $statement->bindValue("post_name", "%$postName%");
             $statement->bindValue("start", $start, PDO::PARAM_INT);
             $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
         } else {
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name  LIKE :post_name';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bi.post_name  LIKE :post_name GROUP BY bi.id';
             $statement = $this->db->prepare($query);
             $statement->bindValue("post_name", "%$postName%");
         } 
@@ -320,8 +297,7 @@ class BlogpostModel extends AbstractModel
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
-
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content LIMIT :start, :length';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bc.content LIKE :content GROUP BY bi.id LIMIT :start, :length';
             
             $statement = $this->db->prepare($query);
 
@@ -331,7 +307,7 @@ class BlogpostModel extends AbstractModel
     
         } else {
 
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bc.content LIKE :content GROUP BY bi.id';
         
             $statement = $this->db->prepare($query);
 
@@ -361,8 +337,7 @@ class BlogpostModel extends AbstractModel
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
-
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  ptc.tag_id = :tag_id LIMIT :start, :length';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bc.content LIKE :content OR  ptc.tag_id = :tag_id GROUP BY bi.id LIMIT :start, :length';
         
             $statement = $this->db->prepare($query);
 
@@ -372,8 +347,7 @@ class BlogpostModel extends AbstractModel
             $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
 
         } else {
-
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  ptc.tag_id = :tag_id';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bc.content LIKE :content OR  ptc.tag_id = :tag_id GROUP BY bi.id';
             
             $statement = $this->db->prepare($query);
 
@@ -398,8 +372,7 @@ class BlogpostModel extends AbstractModel
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
-
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  bi.post_name LIKE :post_name LIMIT :start, :length';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bc.content LIKE :content OR  bi.post_name LIKE :post_name GROUP BY bi.id LIMIT :start, :length';
             
             $statement = $this->db->prepare($query);
 
@@ -408,8 +381,8 @@ class BlogpostModel extends AbstractModel
             $statement->bindValue("start", $start, PDO::PARAM_INT);
             $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
         } else {
-            
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bc.content LIKE :content OR  bi.post_name LIKE :post_name';
+
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bc.content LIKE :content OR  bi.post_name LIKE :post_name GROUP BY bi.id';
         
             $statement = $this->db->prepare($query);
 
@@ -440,8 +413,7 @@ class BlogpostModel extends AbstractModel
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
-
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR ptc.tag_id = :tag_id LIMIT :start, :length';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bi.post_name LIKE :post_name OR ptc.tag_id = :tag_id GROUP BY bi.id LIMIT :start, :length';
             
             $statement = $this->db->prepare($query);
 
@@ -452,8 +424,7 @@ class BlogpostModel extends AbstractModel
 
         } else {
 
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR ptc.tag_id = :tag_id';
-
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bi.post_name LIKE :post_name OR ptc.tag_id = :tag_id GROUP BY bi.id';
             $statement = $this->db->prepare($query);
 
             $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
@@ -484,8 +455,7 @@ class BlogpostModel extends AbstractModel
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
-
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR bc.content LIKE :content OR ptc.tag_id = :tag_id LIMIT :start, :length';
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bi.post_name LIKE :post_name OR bc.content LIKE :content OR ptc.tag_id = :tag_id GROUP BY bi.id LIMIT :start, :length';
             
             $statement = $this->db->prepare($query);
 
@@ -497,8 +467,8 @@ class BlogpostModel extends AbstractModel
 
         } else {
 
-            $query = 'SELECT DISTINCT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LEFT JOIN post_tag_correspondens ptc ON bi.id = ptc.post_id WHERE bi.post_name LIKE :post_name OR bc.content LIKE :content OR ptc.tag_id = :tag_id';
-
+            
+            $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bi.post_name LIKE :post_name OR bc.content LIKE :content OR ptc.tag_id = :tag_id GROUP BY bi.id';
             $statement = $this->db->prepare($query);
             $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
             $statement->bindValue("content", "%$search%", PDO::PARAM_STR);

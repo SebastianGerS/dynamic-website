@@ -231,7 +231,7 @@ class BlogpostsController extends AbstractController
             $search = $params->getString('search');
             $searchType = null;
         }
-        
+        var_dump($params);
       
         $blogpostModel = new BlogpostModel();
         if ($params->has('tags') && $params->has('post_name') && $params->has('content') || $searchType === 6) {

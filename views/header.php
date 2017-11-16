@@ -7,13 +7,13 @@
                     <button class="btn btn-primary bg-success mr-2" type="submit"> Sök!</button>
                     <div class="btn-group text-light" data-toggle="buttons">
                         <lable class="btn btn-success border active checkbox" >
-                        <input type="checkbox" name="tags" value="true" checked autocomplete="off">Tagar
+                        <input type="checkbox" name="tags" value="true" checked>Tagar
                         </lable>
                         <lable class="btn btn-warning border mx-1 checkbox"  >
-                        <input type="checkbox" name="post_name" value="true" checked autocomplete="off">Titel
+                        <input type="checkbox" name="post_name" value="true">Titel
                         </lable>
                         <lable class="btn btn-warning border checkbox" >
-                        <input type="checkbox" name="content" value="true" checked autocomplete="off"> Innehåll
+                        <input type="checkbox" name="content" value="true"> Innehåll
                         </lable>
                     </div>
                 </div>

@@ -117,18 +117,11 @@ class BlogpostsController extends AbstractController
     }
 
     public function insertBlogPostToDb() {
-
-        if(!$this->request->isPost()) 
-        {   
-            
-            return $this->render('views/createBlogpostPage.php');
-        }
-        
-
+   
         $params = $this->request->getParams();
 
        
-      
+     
         if (!$params->has('post_name')) {
             $params = ['errorMessage' => 'Du måste ge dit inlägg en titel'];
             return $this->render('views/createBlogpostPage.php', $params);
@@ -141,17 +134,24 @@ class BlogpostsController extends AbstractController
         }
 
       
-        
+       
         $postName = $params->getString('post_name');
         $content = $params->getString('content');
-       
+      
 
         $tags = explode(" ", trim($params->getString('tagname')));
-       
+        $tags = array_unique($tags);
+        
+        for($i = 0; $i < count($tags); $i++) {
+          
+            if (strlen($tags[$i]) === 0) {
+                unset($tags[$i]);
+            }
+        }
         $blogpostModel = new BlogpostModel();
-       
+     
         $blogpostModel->insertBlogPostToDb($this->user->getId(), $postName, $content, $tags);
-       
+     
         header("Location: /start/logedin/blogposts");
     }
 

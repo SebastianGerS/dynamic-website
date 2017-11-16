@@ -18,7 +18,7 @@ class BlogpostModel extends AbstractModel
         $this->db->beginTransaction();
     
         try {
-        
+          
             $this->insertBlogpostInfoToDB($userId, $postName);
             $postId = $this->insertBlogpostContentToDb($userId, $content);
             $this->insertTagsToDb($tags);
@@ -63,26 +63,33 @@ class BlogpostModel extends AbstractModel
         $statement = $this->db->prepare($query);
         $statement->execute();
         $taglists = $statement->fetchAll(PDO::FETCH_ASSOC);
+       
         foreach($tags as $tag) 
         {
+            
             $toAdd = true;
             foreach($taglists as $curentTags)
             {
+               
             
                 if ($tag == $curentTags["tagname"]) 
                 {
+                    
                 $toAdd = false;  
                 }
             } 
             if($toAdd)
-            {
+            {   
+               
                 $query = 'INSERT INTO tags(tagname) VALUES (:tagname)';
                 $statement = $this->db->prepare($query);
                 $statement->bindValue("tagname", $tag);
+             
                 if(!$statement->execute()) 
-                {
+                {   
                     throw new Exception($statement->errorinfo()[2]);
                 }
+               
             }
         }
     }

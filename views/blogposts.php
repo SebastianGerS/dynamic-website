@@ -17,6 +17,7 @@
                         <h1 class="card-title"><?php echo $blogpost->getPostName() ?></h1>
                         <p class="card-text"><?php echo 'Skapad av: ' . $blogpost->getUsername() ?></p>
                         <p class="card-text"><?php echo 'Datum: ' . $blogpost->getPostCreationTime() ?></p>
+                        <p class="card-text"><?php echo 'Tags: ' . $blogpost->getTags()?></p>
                         <p class="card-text"><?php echo 'Inehåll: ' . substr($blogpost->getContent(), 0, 25) . '...' ?></p>
                     </article></a>
                 </div>

@@ -10,16 +10,17 @@ class BlogpostsController extends AbstractController
 
     public function getAllWithPage($page):string
     {   
-        
+       
        $page = (int)$page;
+    
        $blogpostModel = new BlogpostModel();
-
+       
         $blogposts = $blogpostModel->getBlogpostsByPage($page, self::PAGE_LENGTH);
         
         $allBlogposts = $blogpostModel->getAllBlogposts();
      
         $morePages = true;
-
+      
         if(count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
         {
             $morePages = false;
@@ -37,6 +38,9 @@ class BlogpostsController extends AbstractController
          $nextPage = $path . '/' . ($page+1);
          $previusPage = $path . '/' . ($page-1);
 
+         foreach($blogposts as $blogpost) {
+            $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
+         }
        
          $properties = [
             'blogposts' => $blogposts,
@@ -61,12 +65,15 @@ class BlogpostsController extends AbstractController
     {   
         $blogpostModel = new BlogpostModel();
         
-        $tags = $blogpostModel->getTagsformPost($id);
         $blogpost = $blogpostModel->getBlogpost($id);
         $comments = $blogpostModel->getComments($id);
+
+        
+        $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
+         
+       
         $properties = [
             'blogpost' => $blogpost,
-            'tags'=> $tags,
             'comments' => $comments
         ];
 
@@ -98,7 +105,10 @@ class BlogpostsController extends AbstractController
         {
             $morePages = false;
         } 
-    
+        foreach($blogposts as $blogpost) {
+            $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
+         }
+
         $properties = [
             'blogposts' => $blogposts,
             'page' => $page,
@@ -151,6 +161,7 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
      
         $blogpostModel->insertBlogPostToDb($this->user->getId(), $postName, $content, $tags);
+
      
         header("Location: /start/logedin/blogposts");
     }

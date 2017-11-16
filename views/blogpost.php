@@ -9,7 +9,7 @@
                     <div class="row">
                         <p class="card-text mr-5"><?php echo 'Skapad av: ' . $blogpost->getUsername() ?></p>
                         <p class="card-text mx-5"><?php echo 'Datum: ' . $blogpost->getPostCreationTime() ?></p>
-                        <p class="card-text ml-5"><?php echo 'Tags: ' . $tags?></p>
+                        <p class="card-text ml-5"><?php echo 'Tags: ' . $blogpost->getTags()?></p>
                     </div>
                     <div class="row justify-content-center">
                         <h1 class="card-title py-2"><?php echo $blogpost->getPostName() ?></h1>

@@ -123,7 +123,7 @@ class BlogpostModel extends AbstractModel
     {
         $start = $pageLength * ($page -1);
        
-        $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id LIMIT :page,:length';
+        $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi, blogposts_content bc, users u, post_tag_correspondens ptc, tags t WHERE bc.id = bi.id AND bi.user_id = u.id AND bi.id = ptc.post_id AND ptc.tag_id = t.id GROUP BY bi.id LIMIT :page,:length';
         $statement = $this->db->prepare($query);
        
         $statement->bindParam('page', $start, PDO::PARAM_INT);
@@ -139,17 +139,18 @@ class BlogpostModel extends AbstractModel
     public function getAllBlogposts():array 
     {
        
-        $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id';
+        $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi, blogposts_content bc, users u, post_tag_correspondens ptc, tags t WHERE bc.id = bi.id AND bi.user_id = u.id AND bi.id = ptc.post_id AND ptc.tag_id = t.id GROUP BY bi.id';
         $statement = $this->db->prepare($query);
        
         $statement->execute();
         
        
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
+       
         return $result;
     }
 
-    public function getTagsformPost(int $id)
+    /*public function getTagsformPost(int $id)
     {
         $query = 'SELECT t.tagname FROM tags t LEFT JOIN post_tag_correspondens ptc ON t.id = ptc.tag_id LEFT JOIN blogposts_info bi ON ptc.post_id = bi.id WHERE bi.id =:id';
         $statement = $this->db->prepare($query);
@@ -168,11 +169,11 @@ class BlogpostModel extends AbstractModel
         $result = trim($result);
     
         return $result;
-    }
+    }*/
 
     public function getBlogpost(int $id) 
     {
-        $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.id =:id';
+        $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bc.id =:id GROUP BY bi.id';
         $statement = $this->db->prepare($query);
         $statement->bindParam('id', $id,PDO::PARAM_INT);
 
@@ -186,8 +187,7 @@ class BlogpostModel extends AbstractModel
     public function getByUserWithPage(int $userId, int $page, int $pageLength):array {
         $start = $pageLength * ($page-1);
        
-        $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.user_id = :id LIMIT :start,:length';
-       
+        $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bi.user_id = :id GROUP BY bi.id LIMIT :start,:length';
         $statement = $this->db->prepare($query);
     
         $statement->bindParam('id', $userId, PDO::PARAM_INT);
@@ -200,8 +200,7 @@ class BlogpostModel extends AbstractModel
     }
     public function getAllByUser(int $userId):array {
        
-        $query = 'SELECT bi.*, bc.content, u.username FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bi.id = bc.id LEFT JOIN users u ON bi.user_id = u.id WHERE bi.user_id = :id';
-       
+        $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi LEFT JOIN blogposts_content bc ON bc.id = bi.id LEFT JOIN users u ON u.id = bi.user_id LEFT JOIN post_tag_correspondens ptc ON ptc.post_id = bi.id LEFT JOIN tags t ON t.id = ptc.tag_id WHERE bi.user_id = :id GROUP BY bi.id';
         $statement = $this->db->prepare($query);
     
         $statement->bindParam('id', $userId, PDO::PARAM_INT);
@@ -572,6 +571,7 @@ class BlogpostModel extends AbstractModel
 
     public function insertCommentToDb(int $userId, int $blogpostId, string $content)
     {
+
         $query = 'INSERT INTO blogposts_comments(post_id, content, user_id, post_creation_time) VALUES (:post_id, :content, :user_id, NOW())';
         $statement = $this->db->prepare($query);
         $statement->bindValue('post_id', $blogpostId);

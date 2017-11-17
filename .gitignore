@@ -25,6 +25,7 @@
 *.log
 *.sql
 *.sqlite
+dbinfo.json
 
 # OS generated files #
 ######################
@@ -35,4 +36,9 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Virtual Machine related files #
+#################################
 .vagrant
+Vagrantfile
+provisioner.sh

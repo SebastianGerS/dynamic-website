@@ -19,7 +19,7 @@
                 </div>
             </form>
             <div class="alert alert-info py-0">
-                <h6 class="text-light text-center mt-1">Klicka på knapparna för att välja vad du vill söka på</h6>
+                <h6 class="text-dark text-center mt-1">Klicka på knapparna för att välja vad du vill söka på</h6>
             </div>
         </div>
         <div class="col offset-1 ml-4">
@@ -56,18 +56,21 @@
         </div>
     </div>
     <div class="row col-12 mx-0 bg-info align-items-end justify-content-center">
-        <?php if(isset($user)): ?>
-            <div>
-                <ul class="nav col-12 my-1"  action="/start/logedin/createBlogposts" method="get">
-                    <li class="nav-item mr-2">
+         <div>
+            <ul class="nav col-12 my-1"  action="/start/logedin/createBlogposts" method="get">
+                 <li class="nav-item mr-2">
+                    <a class="nav-link bg-primary text-light" href="/start/blogposts"> View All blogposts</a>
+                </li>
+                <?php if(isset($user)): ?>
+                    <li class="nav-item mx-2">
                         <a class="nav-link bg-primary text-light" href="/start/logedin/createBlogposts"> Create new blogpost</a>
                     </li>
                     <li class="nav-item ml-2">
                         <a class="nav-link bg-primary text-light" href="/start/logedin/my-blogposts"> View my blogposts</a>
                     </li>
-                </ul>
-            </div>
-        <?php endif ?>
+                <?php endif ?>
+            </ul>
+        </div>
     </div>   
     <?php if(isset($errorMessage)): ?> 
         <div class="row col-12 align-items-end alert alert-warning">

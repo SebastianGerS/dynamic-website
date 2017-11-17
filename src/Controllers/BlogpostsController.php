@@ -213,6 +213,10 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
       
         $blogpost = $blogpostModel->getBlogpost($blogpostId);
+
+        
+        $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
+         
         $properties =[
             'title' => 'Här kan du editera dina post',
             'blogpost' => $blogpost

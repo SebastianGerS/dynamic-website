@@ -41,11 +41,9 @@ function checked() {
     this.classList.toggle('btn-warning');
     this.classList.toggle('btn-success');
     this.classList.toggle('active');
-    console.log(this.firstElementChild);
-    console.log("hej");
     if (this.firstElementChild.hasAttribute('checked')){
         this.firstElementChild.removeAttribute('checked');
     } else {
-    this.firstElementChild.setAttribute('checked', "");
+        this.firstElementChild.setAttribute('checked', "");
     }
 } 

@@ -16,6 +16,11 @@ class BlogpostsController extends AbstractController
        $blogpostModel = new BlogpostModel();
        
         $blogposts = $blogpostModel->getBlogpostsByPage($page, self::PAGE_LENGTH);
+
+        if (empty($blogposts)) {
+            $params = ['errorMessage' => 'sidan du letar efter finns inte'];
+            return $this->render('views/error.php', $params);
+        }
         
         $allBlogposts = $blogpostModel->getAllBlogposts();
      
@@ -66,6 +71,10 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
         
         $blogpost = $blogpostModel->getBlogpost($id);
+        if (empty($blogpost)) {
+            $params = ['errorMessage' => 'inlägged du letar efter finns inte'];
+            return $this->render('views/error.php', $params);
+        }
         $comments = $blogpostModel->getComments($id);
 
         
@@ -85,7 +94,11 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
       
         $blogposts = $blogpostModel->getByUserWithPage($this->user->getId(), $page, self::PAGE_LENGTH);
-       
+        
+        if (empty($blogposts)) {
+            $params = ['errorMessage' => 'sidan du letar efter finns inte'];
+            return $this->render('views/error.php', $params);
+        }
         $allBlogposts = $blogpostModel->getAllByUser($this->user->getId());
         $path = $this->request->getPath();
        
@@ -271,7 +284,10 @@ class BlogpostsController extends AbstractController
         return $this->render('views/blogposts.php', $params);
        }
 
-       $path = $this->request->getPath();
+        foreach($blogposts as $blogpost) {
+            $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
+        }
+        $path = $this->request->getPath();
        
         $path = preg_replace('~\d+~','', $path);
        

@@ -7,7 +7,7 @@ use Blog\Models\UserModel;
 class UserController extends AbstractController
 {
 
-    public function login(): string 
+    public function login()
     {    
         if(!$this->request->isPost()) 
         {
@@ -53,7 +53,7 @@ class UserController extends AbstractController
         header("Location: /start/logedin/blogposts");
     }
 
-    public function logout(): string 
+    public function logout() 
     {
       
         $this->unsetUser();

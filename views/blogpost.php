@@ -1,7 +1,13 @@
 <section>
-    <form action=<?php echo "/start/logedin/blogposts"?> method="post">
-        <button  class="btn btn-success my-2" > Tillbaka</button>
-    </form>
+    <?php if(isset($back)):?> 
+        <form action=<?php echo $back?> method="post">
+            <button  class="btn btn-success my-2" > Tillbaka</button>
+        </form>
+    <?php else: ?>
+        <form action= "/start/blogposts" method="post">
+            <button  class="btn btn-success my-2" > Tillbaka</button>
+        </form>
+    <?php endif ?>
     <div class="col-12 card mb-1">
         <div class="card-body col-12">
             <div class="row justify-content-center">

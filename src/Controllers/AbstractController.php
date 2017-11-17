@@ -39,14 +39,13 @@ abstract class AbstractController
         
         $user = json_decode($this->request->getCookies()->get('user'));
         $blogpostModel = new BlogpostModel();
-        
         $toptags = $blogpostModel->topTags();
         $id = 1;
         foreach($toptags as $tag) {
             $properties["toptag$id"] = $tag["tagname"];
             $id++;
         }
-        
+        $properties['back'] = $_SERVER['HTTP_REFERER'];
         $properties['user'] =  $user;
       
         extract($properties);

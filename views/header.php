@@ -37,10 +37,10 @@
                 <div class="col ml-0 pt-1">
                     <form  action="/login" method="post">
                         <div class="input-group pb-1 mb-1">
-                            <input class="form-control" type="text" name="username" placeholder="Användarnamn">
+                            <input class="form-control" type="text" name="username" placeholder="Användarnamn" autocomplete="off">
                         </div>
                         <div class="input-group pb-1 mb-1">
-                            <input  class="form-control " type="text" name="password" placeholder="Lösenord">
+                            <input  class="form-control " type="text" name="password" placeholder="Lösenord" autocomplete="off">
                         </div>
                         <button class="btn btn-primary bg-success ml-5 mb-2" type="submit">Logga in</button>
                     </form>

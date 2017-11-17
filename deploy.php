@@ -31,7 +31,7 @@ host('ssh.binero.se')
 // Tasks
 
 desc('Deploy your project');
-task('deploy_custom_webroot', function() {
+task('deploy:custom_webroot', function() {
     run("cd {{deploy_path}} && ln -sfn {{release_path}} public_html/05-dynamisk-webbplats-php-SebastianGerS");
 });
 task('deploy', [

@@ -198,13 +198,11 @@ class BlogpostsController extends AbstractController
         $blogpostId = $params->getInt('blogpost_id');
       
         $blogpostModel = new BlogpostModel();
-        $tags = $blogpostModel->getTagsformPost($blogpostId);
       
         $blogpost = $blogpostModel->getBlogpost($blogpostId);
         $properties =[
             'title' => 'Här kan du editera dina post',
-            'blogpost' => $blogpost,
-            'tags'=> $tags
+            'blogpost' => $blogpost
 
         ];
         
@@ -231,7 +229,6 @@ class BlogpostsController extends AbstractController
             $search = $params->getString('search');
             $searchType = null;
         }
-        var_dump($params);
       
         $blogpostModel = new BlogpostModel();
         if ($params->has('tags') && $params->has('post_name') && $params->has('content') || $searchType === 6) {

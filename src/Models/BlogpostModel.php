@@ -636,7 +636,6 @@ class BlogpostModel extends AbstractModel
         $statement->execute();
 
         $result = $statement->fetchAll();
-
         return $result;
         
     }

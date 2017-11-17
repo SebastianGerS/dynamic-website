@@ -13,7 +13,7 @@ set('repository', 'https://github.com/chas-academy/05-dynamisk-webbplats-php-Seb
 set('git_tty', true); 
 
 // Shared files/dirs between deploys 
-set('shared_files', []);
+set('shared_files', ['config/dbinfo.json']);
 set('shared_dirs', []);
 
 // Writable dirs by web server 
@@ -23,7 +23,7 @@ set('writable_dirs', []);
 // Hosts
 
 host('ssh.binero.se')
-    ->set('deploy_path', '~/sebastiangerstelsollerman.chas.academy/05-dynamisk-webbplats-php-SebastianGerS')
+    ->set('deploy_path', '~/sebastiangerstelsollerman.chas.academy')
     ->user('226728_sgs')
     ->port(22);    
     
@@ -31,6 +31,9 @@ host('ssh.binero.se')
 // Tasks
 
 desc('Deploy your project');
+task('deploy_custom_webroot', function() {
+    run("cd {{deploy_path}} && ln -sfn {{release_path}} public_html/05-dynamisk-webbplats-php-SebastianGerS");
+});
 task('deploy', [
     'deploy:info',
     'deploy:prepare',
@@ -48,3 +51,6 @@ task('deploy', [
 
 // [Optional] If deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
+after('deploy', 'deploy:custom_webroot');
+
+

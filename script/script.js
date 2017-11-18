@@ -25,10 +25,12 @@ function pushToSearch() {
     if (searchField.value != "" && this.classList.contains('active')) {
         searchField.value += " " + this.innerHTML;
     } else if (this.classList.contains('active')) {
-        searchField.value += this.innerHTML;
+        searchField.value = this.innerHTML;
     } else {
         if (searchField.value.length > this.innerHTML.length ) {
-            searchField.value = searchField.value.replace(" "+this.innerHTML,"");
+            searchField.value = searchField.value.replace(this.innerHTML,"");
+            searchField.value = searchField.value.replace(" ","");
+
 
         } else {
             searchField.value = searchField.value.replace(this.innerHTML,"");

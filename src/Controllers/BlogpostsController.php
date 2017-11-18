@@ -11,9 +11,9 @@ class BlogpostsController extends AbstractController
     public function getAllWithPage($page):string
     {   
        
-       $page = (int)$page;
+        $page = (int)$page;
     
-       $blogpostModel = new BlogpostModel();
+        $blogpostModel = new BlogpostModel();
        
         $blogposts = $blogpostModel->getBlogpostsByPage($page, self::PAGE_LENGTH);
 
@@ -23,29 +23,18 @@ class BlogpostsController extends AbstractController
         }
         
         $allBlogposts = $blogpostModel->getAllBlogposts();
-     
-        $morePages = true;
       
-        if(count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
-        {
-            $morePages = false;
-        } 
+        $morePages = $this->morePages($blogposts, $allBlogposts, $page, self::PAGE_LENGTH);
         
         $path = $this->request->getPath();
 
-        $path = preg_replace('~\d+~','', $path);
-        
-         if (strrpos($path, '/') === (strlen($path)-1)) 
-         {
-             $path =substr($path, 0, strlen($path)-1);
-         }
-        
-         $nextPage = $path . '/' . ($page+1);
-         $previusPage = $path . '/' . ($page-1);
+        $path = $this->pathProcessing($path);
+        $nextPage = $path . '/' . ($page+1);
+        $previusPage = $path . '/' . ($page-1);
 
-         foreach($blogposts as $blogpost) {
-            $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
-         }
+        foreach($blogposts as $blogpost) {
+        $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
+        }
        
          $properties = [
             'blogposts' => $blogposts,
@@ -59,6 +48,30 @@ class BlogpostsController extends AbstractController
 
         return $this->render('views/blogposts.php', $properties);
     }
+
+    public function pathProcessing(string $path):string {
+
+        $path = preg_replace('~\d+~','', $path);
+        
+        if (strrpos($path, '/') === (strlen($path)-1)) 
+        {
+            $path =substr($path, 0, strlen($path)-1);
+        }
+
+        return $path;
+    }
+
+    public function morePages(array $blogposts, array $allBlogposts, int $page , int $pageLength) {
+
+        if (count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < $pageLength) {
+
+            return false;
+
+        } else {
+
+            return true;
+        }
+    }
     
     public function getAll():string
     {   
@@ -71,10 +84,12 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
         
         $blogpost = $blogpostModel->getBlogpost($id);
+
         if (empty($blogpost)) {
             $params = ['errorMessage' => 'inlägged du letar efter finns inte'];
             return $this->render('views/error.php', $params);
         }
+
         $comments = $blogpostModel->getComments($id);
 
         
@@ -102,22 +117,14 @@ class BlogpostsController extends AbstractController
         $allBlogposts = $blogpostModel->getAllByUser($this->user->getId());
         $path = $this->request->getPath();
        
-        $path = preg_replace('~\d+~','', $path);
+        
        
-        if (strrpos($path, '/') === (strlen($path)-1)) 
-        {
-            $path =substr($path, 0, strlen($path)-1);
-        }
-       
+        $path = $this->pathProcessing($path);
         $nextPage = $path . '/' . ($page+1);
         $previusPage = $path . '/' . ($page-1);
-     
-        $morePages = true;
+
+        $morePages = $this->morePages($blogposts, $allBlogposts, $page, self::PAGE_LENGTH);
        
-        if(count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
-        {
-            $morePages = false;
-        } 
         foreach($blogposts as $blogpost) {
             $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
          }
@@ -160,9 +167,19 @@ class BlogpostsController extends AbstractController
        
         $postName = $params->getString('post_name');
         $content = $params->getString('content');
-      
+        $tags = $this->tagProcessing($params->getString('tagname'));
+     
+        $blogpostModel = new BlogpostModel();
+     
+        $blogpostModel->insertBlogPostToDb($this->user->getId(), $postName, $content, $tags);
 
-        $tags = explode(" ", trim($params->getString('tagname')));
+     
+        header("Location: /start/logedin/my-blogposts");
+    }
+
+    public function tagProcessing(string $tags):array {
+
+        $tags = explode(" ", trim($tags));
         $tags = array_unique($tags);
         
         for($i = 0; $i < count($tags); $i++) {
@@ -171,12 +188,8 @@ class BlogpostsController extends AbstractController
                 unset($tags[$i]);
             }
         }
-        $blogpostModel = new BlogpostModel();
-     
-        $blogpostModel->insertBlogPostToDb($this->user->getId(), $postName, $content, $tags);
 
-     
-        header("Location: /start/logedin/blogposts");
+        return $tags;
     }
 
     public function editPostInDatabase() {
@@ -197,7 +210,7 @@ class BlogpostsController extends AbstractController
         $blogpostId = $params->getInt('blogpost_id');
         $postName = $params->getString('post_name');
         $content = $params->getString('content');
-        $tags = explode(" ", $params->getString('tagname'));
+        $tags = $this->tagProcessing($params->getString('tagname'));
         $blogpostModel = new BlogpostModel();
         
         $blogpostModel->editBlogpost($blogpostId, $postName, $tags, $content);
@@ -218,9 +231,7 @@ class BlogpostsController extends AbstractController
         $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
          
         $properties =[
-            'title' => 'Här kan du editera dina post',
             'blogpost' => $blogpost
-
         ];
         
         return $this->render('views/blogpostEditPage.php', $properties);
@@ -248,6 +259,7 @@ class BlogpostsController extends AbstractController
         }
       
         $blogpostModel = new BlogpostModel();
+
         if ($params->has('tags') && $params->has('post_name') && $params->has('content') || $searchType === 6) {
             $blogposts = $blogpostModel->searchByTagsPostAndContent($search, $page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTagsPostAndContent($search);
@@ -291,31 +303,23 @@ class BlogpostsController extends AbstractController
         foreach($blogposts as $blogpost) {
             $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
         }
+
         $path = $this->request->getPath();
        
-        $path = preg_replace('~\d+~','', $path);
-       
-        if (strrpos($path, '/') === (strlen($path)-1)) 
-        {
-            $path =substr($path, 0, strlen($path)-1);
-        }
-       
+        $path = $this->pathProcessing($path);
+
         $nextPage = $path . '/' . ($page+1);
+
         $previusPage = $path . '/' . ($page-1);
      
-        $morePages = true;
-       
-        if(count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < self::PAGE_LENGTH)
-        {
-            $morePages = false;
-        } 
+        $morePages = $this->morePages($blogposts, $allBlogposts, $page, self::PAGE_LENGTH);
+        
 
         if(strpos($path,"search") !== false) {
             $path = "/start/blogpost";
         }
       
         $properties =[
-            'title' => 'Här kan du editera dina post',
             'blogposts' => $blogposts,
             'morePages' => $morePages,
             'nextPage' => $nextPage,
@@ -339,6 +343,7 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
        
         $blogposts = $blogpostModel->deletePostFromDb($blogpostId);
+
         header("Location: start/logedin/blogposts");
        
     }
@@ -368,7 +373,6 @@ class BlogpostsController extends AbstractController
         $comment = $blogpostModel->getComment($commentId);
         $comment = $comment[0];
         $properties =[
-            'title' => 'Här kan du editera dina post',
             'comment' => $comment
 
         ];

@@ -38,4 +38,11 @@ class Comment {
     public function getContent(): string {
         return $this->content;
     }
+
+    public function  issetPostEditTime(){
+        if (isset($this->post_edit_time)) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -32,19 +32,25 @@ class Blogpost {
         return $this->tags;
     }
 
-    public function setTags($newTags) {
-        $this->tags = $newTags;
-    }
-
     public function getPostCreationTime(): string {
         return $this->post_creation_time;
     }
 
-    public function getEditTime(): string {
-        return $this->post_creation_time;
+    public function getPostEditTime(): string {
+        return $this->post_edit_time;
     }
 
     public function getContent(): string {
         return $this->content;
+    }
+
+    public function issetPostEditTime() {
+
+       if (isset($this->post_edit_time)) {
+           return true;
+       }
+
+        return false;
+
     }
 }

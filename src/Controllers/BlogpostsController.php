@@ -17,8 +17,8 @@ class BlogpostsController extends AbstractController
         $blogposts = $blogpostModel->getBlogpostsByPage($page, self::PAGE_LENGTH);
 
         if (empty($blogposts)) {
-            $params = ['errorMessage' => 'sidan du letar efter finns inte'];
-            return $this->render('views/error.php', $params);
+            $properties = ['errorMessage' => 'sidan du letar efter finns inte'];
+            return $this->render('views/error.php', $properties);
         }
         
         $allBlogposts = $blogpostModel->getAllBlogposts();
@@ -28,14 +28,16 @@ class BlogpostsController extends AbstractController
         $path = $this->request->getPath();
 
         $path = $this->pathProcessing($path);
-        $nextPage = $path . '/' . ($page+1);
+
+        $nextPage = $path . '/' . ($page+1); 
         $previusPage = $path . '/' . ($page-1);
-       
+       //dynamicly sets nextPage and previousPage by concatenating curent path to with curent page added/subtracted with one
+
          $properties = [
             'blogposts' => $blogposts,
             'page' => $page,
             'morePages' => $morePages,
-            'path' => substr($path,0,strlen($path)-1),
+            'path' => substr($path,0,strlen($path)-1), //becouse this path will be used to get to a spisific blogpost we dont want the "s" in the end of the path
             'nextPage' => $nextPage,
             'previusPage' => $previusPage
         ];
@@ -54,7 +56,8 @@ class BlogpostsController extends AbstractController
         }
 
         return $path;
-    }
+    } /* this function takes a argument that in controller will be the current path 
+        and removes anny numbers in the path and then checks if therse a "/" in the last position of the $path if so, it's removed */
 
     public function morePages(array $blogposts, array $allBlogposts, int $page , int $pageLength) 
     {
@@ -67,7 +70,9 @@ class BlogpostsController extends AbstractController
 
             return true;
         }
-    }
+    } /* this function checks if the length of first array (blogposts) times the curent page
+     is less or equal to the the length of the second array(allblogposts) or if the first array is less then the length of the page
+     this is to determain wheter or not there are sufficient bloggposts to render morepages*/
     
     public function getAll():string
     {   
@@ -98,7 +103,9 @@ class BlogpostsController extends AbstractController
         if ($params->has('rootPage')) {
             $properties['rootPage'] = $params->getString('rootPage');
            
-        }
+        } /*checks if the parameter rootPage isset if so it's pased allong to properties. 
+          This parameter is used to preserve the path from which the user enterd the blogpost view 
+          to make it possible to navigate back to the page before even if  subbpages has been viseted in between*/
 
         $properties['previousPage'] = $previusPage;
 
@@ -113,8 +120,8 @@ class BlogpostsController extends AbstractController
         $blogposts = $blogpostModel->getByUserWithPage($this->user->getId(), $page, self::PAGE_LENGTH);
         
         if (empty($blogposts)) {
-            $params = ['errorMessage' => 'Du har inga blogposter än'];
-            return $this->render('views/blogposts.php', $params);
+            $properties = ['errorMessage' => 'Du har inga blogposter än'];
+            return $this->render('views/blogposts.php', $properties);
         }
 
         $allBlogposts = $blogpostModel->getAllByUser($this->user->getId());
@@ -156,7 +163,7 @@ class BlogpostsController extends AbstractController
         } else if (!$params->has('content')) {
             $params = ['errorMessage' => 'Ditt inlägg måste ha innehåll för att kunna skapas'];
             return $this->render('views/createBlogpostPage.php', $params);
-        }
+        } //checkes that all nesesary infromation has been filed in by the user 
 
         $postName = $params->getString('post_name');
         $content = $params->getString('content');
@@ -182,7 +189,8 @@ class BlogpostsController extends AbstractController
         }
 
         return $tags;
-    }
+    } //this functions takes a string, trims enny whitespace before or after, explodes the string into an array, 
+      //removes anny eventual duplicates in the array and removes enny tags that has a length of 0
 
     public function editPostInDatabase() {
 
@@ -203,7 +211,7 @@ class BlogpostsController extends AbstractController
 
             $params = ['errorMessage' => 'Du får ändra innehållet, men du kan inte ta bort allt innehåll, önskar du ta bort inlägget var god och använd tabort knappen istället'];
             return $this->render('views/createBlogpostPage.php', $params);
-        }
+        } //checkes that all nesecary info is filed in
 
         $blogpostId = $params->getInt('blogpost_id');
         $postName = $params->getString('post_name');
@@ -213,7 +221,7 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
         $blogpostModel->editBlogpost($blogpostId, $postName, $tags, $content);
 
-        header("Location: /start/blogpost/" . $blogpostId);
+        header("Location: /start/blogpost/" . $blogpostId); // redirects to the blogpost view of the edited blogpost
 
     }
 
@@ -243,20 +251,23 @@ class BlogpostsController extends AbstractController
 
             $search = $_COOKIE['search'];
             $searchType = (int) $_COOKIE['search_type'];
-          
+            // if search is not set and the cookie search is set this means that this 
+            //functions was triggerd by the user pushing either the next or the previouspages button
+            // this meens that in stead of looking on the search field for what type of search it is 
+            //or what to search for we need to look in the previusly set cookie 
         } else if($params->getString('search') === "") {
 
             $params = ['errorMessage' => 'skriv in den taggen du vill söka efter'];
 
-            setcookie("search_type", null, time() -3600);
+            setcookie("search_type", null, time() -3600); 
             setcookie("search", null, time() -3600);
-
+            //makes shure no informations from previus search is saved
             return $this->render('views/blogposts.php', $params);
           
         } else {
 
             $search = $params->getString('search');
-            $searchType = null;
+            $searchType = null; //makes shure that the search type is set to null so that it whont interfear with this new search
         }
       
         $blogpostModel = new BlogpostModel();
@@ -307,7 +318,7 @@ class BlogpostsController extends AbstractController
             
             $params = ['errorMessage' => 'du måste välja vad du vill söka efter'];
             return $this->render('views/blogposts.php', $params);
-        }
+        } // checks which params has been set or if theres a searchtype thats has been set and selects apropriet function in moddel to search with
 
       
        if (empty($blogposts)) {
@@ -316,7 +327,7 @@ class BlogpostsController extends AbstractController
         setcookie("search_type", null, time() -3600);
         setcookie("search", null, time() -3600);
         return $this->render('views/blogposts.php', $params);
-       }
+       } //if theres no search ressult a error messages is returned with the view
 
         $path = $this->request->getPath();
         $path = $this->pathProcessing($path);
@@ -324,11 +335,8 @@ class BlogpostsController extends AbstractController
         $previusPage = $path . '/' . ($page-1);
         $morePages = $this->morePages($blogposts, $allBlogposts, $page, self::PAGE_LENGTH);
         
-
-        if(strpos($path,"search") !== false) {
-
-            $path = "/start/blogpost";
-        }
+        $path = "/start/blogpost"; //resets the path neccesary becous it's used to set corect 
+        //path to the spesific blogposts which differs alot from the search path
       
         $properties =[
             'blogposts' => $blogposts,
@@ -337,12 +345,11 @@ class BlogpostsController extends AbstractController
             'previusPage' => $previusPage,
             'page' => $page,
             'path' => $path
-
         ];
 
         setcookie("search_type", $searchType, time() + 3600);
         setcookie("search", $search, time() + 3600);
-
+        //setts coockies to perserve information off the search incase there ar multiple pages in the search which then would need that information to render properly
         return $this->render('views/blogposts.php', $properties);
     }
 
@@ -421,7 +428,7 @@ class BlogpostsController extends AbstractController
 
             $params = ['errorMessage' => 'Ditt inlägg måste ha innehåll för att kunna skapas'];
             return $this->render('views/createCommentPage.php', $params);
-            
+
         }
         
         $content = $params->getString('content');

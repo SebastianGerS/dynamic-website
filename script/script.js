@@ -19,7 +19,8 @@ var init = function() {
     }
     
 }
-window.onload = init;
+
+window.onload = init; //makes sure that all content is loaded before script is initialized
 
 
 function pushToSearch() {
@@ -46,7 +47,9 @@ function pushToSearch() {
         searchField.value = searchField.value.replace(this.innerHTML,"");
     }
     
-} 
+} /* this function is conected to several eventlisteners and will toggel classes on or off on
+     the eventlistener is contected to. It will also push the objects value to a input 
+     field if (the value) it's not in the field and remove it if it's there*/
 
 function checked() {
 
@@ -62,4 +65,4 @@ function checked() {
 
         this.firstElementChild.setAttribute('checked', "");
     }
-} 
+} //this function is conected to several eventlisteners and will toggels classes and atributes on or off when triggerd

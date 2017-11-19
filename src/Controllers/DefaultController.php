@@ -33,8 +33,8 @@ class DefaultController extends AbstractController
 
         $properties =[
             'title' => 'skapa en kommentar',
-            'blogpostId' => $blogpostId,
-            'rootPage' => $params->getString('rootPage')
+            'blogpostId' => $blogpostId, // this is set to perserve keep track of which blogpost the user is trying to comment
+            'rootPage' => $params->getString('rootPage')  //this passes along the information about which page the user came from to get to the spicific blogpost
         ];
 
         return $this->render('views/createCommentPage.php', $properties);

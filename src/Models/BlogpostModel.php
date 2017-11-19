@@ -335,7 +335,9 @@ class BlogpostModel extends AbstractModel
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         return $result;
-    }
+    } // function that does on of two things dempending on the input. 
+    //either it gives all the results matching a sertain word on tags
+    //or it gets a limited part of that same result
 
     public function searchByPost(string $postName, int $page = null, int $pageLength = null) 
     {
@@ -383,7 +385,9 @@ class BlogpostModel extends AbstractModel
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
 
         return $result;
-    }
+    } // function that does on of two things dempending on the input. 
+    //either it gives all the results matching a sertain word on post_name
+    //or it gets a limited part of that same result
 
     public function searchByContent(string $content, int $page = null, int $pageLength = null) 
     {
@@ -433,7 +437,9 @@ class BlogpostModel extends AbstractModel
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
       
         return $result;
-    }
+    }// function that does on of two things dempending on the input. 
+    //either it gives all the results matching a sertain word on content
+    //or it gets a limited part of that same result
 
     public function searchByTagsAndContent(string $search, int $page = null, int $pageLength = null) 
     {
@@ -483,7 +489,9 @@ class BlogpostModel extends AbstractModel
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
 
         return $result;
-    }
+    }// function that does on of two things dempending on the input. 
+    //either it gives all the results matching a sertain word on aither content or tagname
+    //or it gets a limited part of that same result
 
     public function searchByPostAndContent (string $search, int $page = null, int $pageLength = null) 
     {
@@ -533,7 +541,9 @@ class BlogpostModel extends AbstractModel
 
         
         return $result;
-    }
+    }// function that does on of two things dempending on the input. 
+    //either it gives all the results matching a sertain word on aither post_name or content
+    //or it gets a limited part of that same result
 
     public function searchByTagsAndPost (string $search, int $page = null, int $pageLength = null) 
     {
@@ -584,7 +594,9 @@ class BlogpostModel extends AbstractModel
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         
         return $result;
-    }
+    }// function that does on of two things dempending on the input. 
+    //either it gives all the results matching a sertain word on aither post_name or tagname
+    //or it gets a limited part of that same result
 
     public function searchByTagsPostAndContent (string $search, int $page = null, int $pageLength = null) 
     {
@@ -637,7 +649,9 @@ class BlogpostModel extends AbstractModel
 
         
         return $result;
-    }
+    } // function that does on of two things dempending on the input. 
+    //either it gives all the results matching a sertain word on aither post_name, content or tagname
+    //or it gets a limited part of that same result
 
     public function deleteComentsFromBlogpost(int $id)
     {
@@ -650,7 +664,7 @@ class BlogpostModel extends AbstractModel
 
             throw new Exception($statement->errorinfo()[2]);
         }
-    }
+    }//functions responsible for handeling deltion of all the comments realtaed to a sertain blogpost
 
     public function deleteBlogpostContent(int $id)
     {
@@ -662,7 +676,7 @@ class BlogpostModel extends AbstractModel
         if(!$statement->execute()) {
             throw new Exception($statement->errorinfo()[2]);
         }
-    }
+    } //functions responsible for handeling deltion from the blogpost_content table
 
     public function deleteBlopostInfo(int $id)
     {
@@ -673,7 +687,7 @@ class BlogpostModel extends AbstractModel
         if(!$statement->execute()) {     
             throw new Exception($statement->errorinfo()[2]);
         }           
-    }
+    } //functions responsible for handeling deltion from the blogpost_info table
 
     public function deletePostFromDb(int $id) 
     {
@@ -693,7 +707,7 @@ class BlogpostModel extends AbstractModel
             $this->db->rollBack();
             throw $e;
         }
-    }
+    } // deletes a blogpost from the database
 
     public function insertCommentToDb(int $userId, int $blogpostId, string $content)
     {
@@ -710,7 +724,7 @@ class BlogpostModel extends AbstractModel
             throw new Exception($statement->errorinfo()[2]);
         }       
 
-    }
+    } // inserts a new comment to the database
 
     public function getComments(int $id)
     {
@@ -734,7 +748,7 @@ class BlogpostModel extends AbstractModel
 
         return $result;
 
-    }
+    } // gets all comments related to a spesific blogpost
 
     public function deleteCommentFromDb(int $id)
     {
@@ -748,7 +762,7 @@ class BlogpostModel extends AbstractModel
         }
 
         $statement->execute();
-    }
+    } // removes a comment with a spesific id
 
     public function getComment(int $id)
     {
@@ -771,7 +785,7 @@ class BlogpostModel extends AbstractModel
 
         return $result;
 
-    }
+    } //selects a spisific comment from a givven id
 
     public function editComment(int $id, string $content) 
     {
@@ -789,7 +803,7 @@ class BlogpostModel extends AbstractModel
         
         $statement->execute();
     
-    }
+    } //updated a spisific comment with the provided content
 
     public function topTags() : array
     {
@@ -811,6 +825,6 @@ class BlogpostModel extends AbstractModel
         
         return $result;
         
-    }
+    } // query that pulls out the 3 most used tags from the database
 }
 ?>

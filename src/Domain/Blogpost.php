@@ -61,5 +61,7 @@ class Blogpost {
 
         return false;
 
-    }
-}
+    } //this function makes it possible to check if the post_edit_time 
+      //varible isset this is needed in some view where this information shulde be renderd if it's set
+
+} // this class provides a template on which the blogposts info gathered thure querys can be matched to and stored

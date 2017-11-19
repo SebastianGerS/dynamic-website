@@ -56,4 +56,4 @@ class Comment {
         
         return false;
     }
-}
+}  // this class provides a template on which the comment info gathered thure querys can be matched to and stored

@@ -31,7 +31,8 @@ class BlogpostModel extends AbstractModel
     
     }
     
-    protected function insertBlogpostInfoToDB(int $userId, string $postName) {
+    protected function insertBlogpostInfoToDB(int $userId, string $postName) 
+    {
         $query = 'INSERT INTO blogposts_info(user_id, post_name, post_creation_time) VALUES(:user_id, :post_name, NOW())';
         $statement = $this->db->prepare($query);
         $statement->bindValue("user_id", $userId);
@@ -58,51 +59,47 @@ class BlogpostModel extends AbstractModel
         return $postId;
     }
 
-    protected function insertTagsToDb(array $tags) {
+    protected function insertTagsToDb(array $tags) 
+    {
         $query = 'SELECT tagname FROM tags';
         $statement = $this->db->prepare($query);
         $statement->execute();
         $taglists = $statement->fetchAll(PDO::FETCH_ASSOC);
        
-        foreach($tags as $tag) 
-        {
+        foreach($tags as $tag) {
             
             $toAdd = true;
-            foreach($taglists as $curentTags)
-            {
+
+            foreach($taglists as $curentTags){
                
             
-                if ($tag == $curentTags["tagname"]) 
-                {
+                if ($tag == $curentTags["tagname"]) {
                     
-                $toAdd = false;  
+                    $toAdd = false;  
                 }
             } 
-            if($toAdd)
-            {   
+
+            if($toAdd){   
                
                 $query = 'INSERT INTO tags(tagname) VALUES (:tagname)';
                 $statement = $this->db->prepare($query);
                 $statement->bindValue("tagname", $tag);
              
-                if(!$statement->execute()) 
-                {   
+                if(!$statement->execute()) {   
                     throw new Exception($statement->errorinfo()[2]);
                 }
-               
             }
         }
     }
 
-    protected function createTagPostConnection (array $tags, int $postId) {
-        
+    protected function createTagPostConnection (array $tags, int $postId) 
+    {    
         foreach($tags as $tag) {
             
             $query = 'SELECT id FROM tags WHERE tagname =:tagname';
             $statement = $this->db->prepare($query);
             $statement->bindValue("tagname", $tag);
-            if(!$statement->execute()) 
-            {
+            if(!$statement->execute()) {
                 throw new Exception($statement->errorinfo()[2]);
             }
             $statement->execute();
@@ -111,8 +108,7 @@ class BlogpostModel extends AbstractModel
             $statement = $this->db->prepare($query);
             $statement->bindValue("post_id", $postId);
             $statement->bindValue("tag_id", $tagId);
-            if(!$statement->execute()) 
-            {
+            if(!$statement->execute()) {
                 throw new Exception($statement->errorInfo()[2]);
                 
             }
@@ -180,7 +176,8 @@ class BlogpostModel extends AbstractModel
 
     }
 
-    public function getByUserWithPage(int $userId, int $page, int $pageLength):array {
+    public function getByUserWithPage(int $userId, int $page, int $pageLength):array 
+    {
         $start = $pageLength * ($page-1);
        
         $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
@@ -192,17 +189,22 @@ class BlogpostModel extends AbstractModel
         GROUP BY bi.id 
         ORDER BY bi.post_creation_time DESC 
         LIMIT :start,:length';
+
         $statement = $this->db->prepare($query);
     
         $statement->bindParam('id', $userId, PDO::PARAM_INT);
         $statement->bindParam('start', $start, PDO::PARAM_INT);
         $statement->bindParam('length', $pageLength, PDO::PARAM_INT);
         $statement->execute();
+
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
+
         return $result;
 
     }
-    public function getAllByUser(int $userId):array {
+
+    public function getAllByUser(int $userId):array 
+    {
        
         $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname) AS tags FROM blogposts_info bi 
         LEFT JOIN blogposts_content bc ON bc.id = bi.id 
@@ -212,28 +214,37 @@ class BlogpostModel extends AbstractModel
         WHERE bi.user_id = :id 
         GROUP BY bi.id 
         ORDER BY bi.post_creation_time DESC';
+
         $statement = $this->db->prepare($query);
     
         $statement->bindParam('id', $userId, PDO::PARAM_INT);
         $statement->execute();
+
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
+
         return $result;
 
     }
 
-    public function editBlogpostInfo(int $postId, string $postName) {
+    public function editBlogpostInfo(int $postId, string $postName) 
+    {
 
         $query = 'UPDATE blogposts_info SET post_name =:post_name, post_edit_time = NOW() WHERE id =:post_id';
+
         $statement = $this->db->prepare($query);
+
         $statement->bindValue('post_id', $postId);
         $statement->bindValue('post_name', $postName);
+
         if (!$statement->execute()) {
             
             throw new Exception($statement->errorinfo()[2]);;
         }
         
     }
-    public function editBlogpostContent(int $postId, string $content) {
+
+    public function editBlogpostContent(int $postId, string $content) 
+    {
 
         $query = 'UPDATE blogposts_content SET content =:content WHERE id =:post_id';
         $statement = $this->db->prepare($query);
@@ -244,19 +255,24 @@ class BlogpostModel extends AbstractModel
             
         }
     }
-    public function deletePostTagCorrespondens(int $postId) {
+
+    public function deletePostTagCorrespondens(int $postId) 
+    {
         $query = 'DELETE FROM post_tag_correspondens WHERE post_id =:post_id';
         $statement = $this->db->prepare($query);
         $statement->bindValue("post_id", $postId);
-        if(!$statement->execute()) 
-        {
+
+        if(!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);
         }
     
     }
 
-    public function editBlogpost(int $postId, string $postName, array $tags, string $content) {
+    public function editBlogpost(int $postId, string $postName, array $tags, string $content) 
+    {
         $this->db->beginTransaction();
+
         try {
 
             $this->editBlogpostInfo($postId, $postName);
@@ -290,6 +306,7 @@ class BlogpostModel extends AbstractModel
             HAVING tags LIKE :tagname
             ORDER BY bi.post_creation_time DESC
             LIMIT :start, :length';
+
             $statement = $this->db->prepare($query);
 
             $statement->bindValue("start", $start, PDO::PARAM_INT);
@@ -310,8 +327,7 @@ class BlogpostModel extends AbstractModel
 
         $statement->bindValue("tagname", "%$tagname%");
 
-        if(!$statement->execute()) 
-        {
+        if(!$statement->execute()) {
 
             throw new Exception($statement->errorinfo()[2]);
         }
@@ -320,10 +336,13 @@ class BlogpostModel extends AbstractModel
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
         return $result;
     }
-    public function searchByPost(string $postName, int $page = null, int $pageLength = null) {
+
+    public function searchByPost(string $postName, int $page = null, int $pageLength = null) 
+    {
         if (isset($page)) {
         
             $start = ($page -1) * $pageLength;
+
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
             LEFT JOIN blogposts_content bc ON bc.id = bi.id 
             LEFT JOIN users u ON u.id = bi.user_id 
@@ -333,9 +352,12 @@ class BlogpostModel extends AbstractModel
             GROUP BY bi.id 
             ORDER BY bi.post_creation_time 
             DESC LIMIT :start, :length';
+
             $statement = $this->db->prepare($query);
+
             $statement->bindValue("start", $start, PDO::PARAM_INT);
             $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
+
         } else {
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
             LEFT JOIN blogposts_content bc ON bc.id = bi.id 
@@ -345,26 +367,31 @@ class BlogpostModel extends AbstractModel
             WHERE bi.post_name  LIKE :post_name 
             GROUP BY bi.id 
             ORDER BY bi.post_creation_time DESC';
+
             $statement = $this->db->prepare($query);
         } 
 
         $statement->bindValue("post_name", "%$postName%");
        
-        if(!$statement->execute()) 
-        {
+        if(!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);
         }
 
         $statement->execute();
+
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
+
         return $result;
     }
 
-    public function searchByContent(string $content, int $page = null, int $pageLength = null) {
+    public function searchByContent(string $content, int $page = null, int $pageLength = null) 
+    {
 
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
+
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
             LEFT JOIN blogposts_content bc ON bc.id = bi.id 
             LEFT JOIN users u ON u.id = bi.user_id 
@@ -397,22 +424,24 @@ class BlogpostModel extends AbstractModel
         $statement->bindValue("content", "%$content%", PDO::PARAM_STR);
 
         if(!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);
         }
 
         $statement->execute();
        
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
-
       
         return $result;
     }
 
-    public function searchByTagsAndContent(string $search, int $page = null, int $pageLength = null) {
+    public function searchByTagsAndContent(string $search, int $page = null, int $pageLength = null) 
+    {
 
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
+
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
             LEFT JOIN blogposts_content bc ON bc.id = bi.id 
             LEFT JOIN users u ON u.id = bi.user_id 
@@ -429,6 +458,7 @@ class BlogpostModel extends AbstractModel
             $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
 
         } else {
+
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
             LEFT JOIN blogposts_content bc ON bc.id = bi.id 
             LEFT JOIN users u ON u.id = bi.user_id 
@@ -452,11 +482,11 @@ class BlogpostModel extends AbstractModel
        
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::BLOGPOSTCLASSNAME);
 
-      
         return $result;
     }
 
-    public function searchByPostAndContent (string $search, int $page = null, int $pageLength = null) {
+    public function searchByPostAndContent (string $search, int $page = null, int $pageLength = null) 
+    {
 
         if (isset($page)) {
             
@@ -475,6 +505,7 @@ class BlogpostModel extends AbstractModel
 
             $statement->bindValue("start", $start, PDO::PARAM_INT);
             $statement->bindValue("length", $pageLength, PDO::PARAM_INT);
+
         } else {
 
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
@@ -492,8 +523,7 @@ class BlogpostModel extends AbstractModel
         $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
         $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
 
-        if(!$statement->execute()) 
-        {
+        if(!$statement->execute()) {
             throw new Exception($statement->errorinfo()[2]);
         }
 
@@ -505,11 +535,12 @@ class BlogpostModel extends AbstractModel
         return $result;
     }
 
-    public function searchByTagsAndPost (string $search, int $page = null, int $pageLength = null) {
-
+    public function searchByTagsAndPost (string $search, int $page = null, int $pageLength = null) 
+    {
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
+
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
             LEFT JOIN blogposts_content bc ON bc.id = bi.id 
             LEFT JOIN users u ON u.id = bi.user_id 
@@ -535,14 +566,16 @@ class BlogpostModel extends AbstractModel
             GROUP BY bi.id 
             HAVING bi.post_name LIKE :post_name OR tags LIKE :tagname 
             ORDER BY bi.post_creation_time DESC';
+
             $statement = $this->db->prepare($query);
+
         }
 
         $statement->bindValue("post_name", "%$search%", PDO::PARAM_STR);
         $statement->bindValue("tagname", "%$search%", PDO::PARAM_INT);
 
-        if(!$statement->execute()) 
-        {
+        if(!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);
         }
 
@@ -553,11 +586,13 @@ class BlogpostModel extends AbstractModel
         return $result;
     }
 
-    public function searchByTagsPostAndContent (string $search, int $page = null, int $pageLength = null) {
+    public function searchByTagsPostAndContent (string $search, int $page = null, int $pageLength = null) 
+    {
         
         if (isset($page)) {
             
             $start = ($page -1) * $pageLength;
+
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
             LEFT JOIN blogposts_content bc ON bc.id = bi.id 
             LEFT JOIN users u ON u.id = bi.user_id 
@@ -575,7 +610,6 @@ class BlogpostModel extends AbstractModel
 
         } else {
 
-            
             $query = 'SELECT bi.*, bc.content, u.username, GROUP_CONCAT(t.tagname SEPARATOR " ") AS tags FROM blogposts_info bi 
             LEFT JOIN blogposts_content bc ON bc.id = bi.id 
             LEFT JOIN users u ON u.id = bi.user_id 
@@ -584,6 +618,7 @@ class BlogpostModel extends AbstractModel
             GROUP BY bi.id 
             HAVING bi.post_name LIKE :post_name OR bc.content LIKE :content OR tags LIKE :tagname 
             ORDER BY bi.post_creation_time DESC';
+
             $statement = $this->db->prepare($query);
         }
 
@@ -591,8 +626,7 @@ class BlogpostModel extends AbstractModel
         $statement->bindValue("content", "%$search%", PDO::PARAM_STR);
         $statement->bindValue("tagname", "%$search%", PDO::PARAM_INT);
 
-        if(!$statement->execute()) 
-        {
+        if(!$statement->execute()) {
 
             throw new Exception($statement->errorinfo()[2]);
         }
@@ -605,45 +639,48 @@ class BlogpostModel extends AbstractModel
         return $result;
     }
 
-    public function deleteComentsFromBlogpost(int $id){
+    public function deleteComentsFromBlogpost(int $id)
+    {
         $query = 'DELETE FROM blogposts_comments WHERE post_id =:id';
+
         $statement = $this->db->prepare($query);
         $statement->bindValue("id", $id);
         
-        if(!$statement->execute()) 
-        {
+        if(!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);
         }
     }
 
-    public function deleteBlogpostContent(int $id){
+    public function deleteBlogpostContent(int $id)
+    {
 
         $query = 'DELETE FROM blogposts_content WHERE id =:id';
         $statement = $this->db->prepare($query);
         $statement->bindValue("id", $id);
         
-        if(!$statement->execute()) 
-        {
+        if(!$statement->execute()) {
             throw new Exception($statement->errorinfo()[2]);
         }
     }
 
-    public function deleteBlopostInfo(int $id){
-
+    public function deleteBlopostInfo(int $id)
+    {
         $query = 'DELETE FROM blogposts_info WHERE id =:id';
         $statement = $this->db->prepare($query);
         $statement->bindValue("id", $id);
      
-        if(!$statement->execute()) 
-        {     
+        if(!$statement->execute()) {     
             throw new Exception($statement->errorinfo()[2]);
         }           
     }
 
-    public function deletePostFromDb(int $id) {
+    public function deletePostFromDb(int $id) 
+    {
         $this->db->beginTransaction();
         
         try {
+
             $this->deleteComentsFromBlogpost($id);
             $this->deleteBlogpostContent($id);
             $this->deletePostTagCorrespondens($id);
@@ -652,6 +689,7 @@ class BlogpostModel extends AbstractModel
             $this->db->commit();
 
         } catch (Exception $e) {
+
             $this->db->rollBack();
             throw $e;
         }
@@ -659,15 +697,16 @@ class BlogpostModel extends AbstractModel
 
     public function insertCommentToDb(int $userId, int $blogpostId, string $content)
     {
-
         $query = 'INSERT INTO blogposts_comments(post_id, content, user_id, post_creation_time) VALUES (:post_id, :content, :user_id, NOW())';
+        
         $statement = $this->db->prepare($query);
+
         $statement->bindValue('post_id', $blogpostId);
         $statement->bindValue('content', $content);
         $statement->bindValue('user_id', $userId);
        
-        if(!$statement->execute()) 
-        {     
+        if(!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);
         }       
 
@@ -678,17 +717,21 @@ class BlogpostModel extends AbstractModel
         $query ='SELECT bc.* , u.username FROM blogposts_comments bc 
         LEFT JOIN users u ON u.id = bc.user_id 
         WHERE bc.post_id = :post_id';
+
         $statement = $this->db->prepare($query);
+
         $statement->bindValue('post_id', $id);
 
 
-        if(!$statement->execute()) 
-        {     
+        if(!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);
         } 
 
         $statement->execute();
+
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::COMMENTCLASSNAME);
+
         return $result;
 
     }
@@ -699,8 +742,8 @@ class BlogpostModel extends AbstractModel
         $statement = $this->db->prepare($query);
         $statement->bindValue("id", $id);
         
-        if(!$statement->execute()) 
-        {
+        if(!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);
         }
 
@@ -712,17 +755,20 @@ class BlogpostModel extends AbstractModel
         $query ='SELECT bc.* , u.username FROM blogposts_comments bc 
         LEFT JOIN users u ON u.id = bc.user_id 
         WHERE bc.id = :id';
+
         $statement = $this->db->prepare($query);
+
         $statement->bindValue('id', $id);
 
+        if(!$statement->execute()) {   
 
-        if(!$statement->execute()) 
-        {     
             throw new Exception($statement->errorinfo()[2]);
         } 
 
         $statement->execute();
+
         $result = $statement->fetchAll(PDO::FETCH_CLASS, self::COMMENTCLASSNAME);
+
         return $result;
 
     }
@@ -730,27 +776,31 @@ class BlogpostModel extends AbstractModel
     public function editComment(int $id, string $content) 
     {
         $query = 'UPDATE blogposts_comments SET content =:content, post_edit_time = NOW() WHERE id =:id';
+
         $statement = $this->db->prepare($query);
+
         $statement->bindValue('id', $id);
         $statement->bindValue('content', $content);
+
         if (!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);;
-            
         }
         
         $statement->execute();
     
     }
+
     public function topTags() : array
     {
-        
         $query = 'SELECT DISTINCT t.*, COUNT(ptc.tag_id) AS count FROM tags t 
         LEFT JOIN post_tag_correspondens ptc ON ptc.tag_id = t.id 
         GROUP BY t.tagname ORDER BY count DESC LIMIT 3';
-        $statement = $this->db->prepare($query);
-       
 
+        $statement = $this->db->prepare($query);
+    
         if (!$statement->execute()) {
+
             throw new Exception($statement->errorinfo()[2]);;
             
         }
@@ -758,6 +808,7 @@ class BlogpostModel extends AbstractModel
         $statement->execute();
 
         $result = $statement->fetchAll();
+        
         return $result;
         
     }

@@ -1,7 +1,7 @@
 <?php
+
 use Blog\Core\Router;
 use Blog\Core\Request;
-
 
 function autoloader($classname)
 {
@@ -14,13 +14,11 @@ function autoloader($classname)
 
 spl_autoload_register('autoloader');
 
-
 $router = new Router();
 
 $response = $router->route(new Request());
 
 echo $response;
-
 
 ?>
 

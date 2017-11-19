@@ -10,7 +10,6 @@ class BlogpostsController extends AbstractController
 
     public function getAllWithPage($page):string
     {   
-       
         $page = (int)$page;
     
         $blogpostModel = new BlogpostModel();
@@ -45,19 +44,20 @@ class BlogpostsController extends AbstractController
         return $this->render('views/blogposts.php', $properties);
     }
 
-    public function pathProcessing(string $path):string {
-
+    public function pathProcessing(string $path):string 
+    {
         $path = preg_replace('~\d+~','', $path);
         
-        if (strrpos($path, '/') === (strlen($path)-1)) 
-        {
+        if (strrpos($path, '/') === (strlen($path)-1)) {
+
             $path =substr($path, 0, strlen($path)-1);
         }
 
         return $path;
     }
 
-    public function morePages(array $blogposts, array $allBlogposts, int $page , int $pageLength) {
+    public function morePages(array $blogposts, array $allBlogposts, int $page , int $pageLength) 
+    {
 
         if (count($blogposts)*$page >= count($allBlogposts) || count($blogposts) < $pageLength) {
 
@@ -71,7 +71,6 @@ class BlogpostsController extends AbstractController
     
     public function getAll():string
     {   
-       
         return $this->getAllWithPage(1);
     }
 
@@ -95,6 +94,7 @@ class BlogpostsController extends AbstractController
             'blogpost' => $blogpost,
             'comments' => $comments
         ];
+
         if ($params->has('rootPage')) {
             $properties['rootPage'] = $params->getString('rootPage');
            
@@ -106,6 +106,7 @@ class BlogpostsController extends AbstractController
     }
 
     public function getByUserWithPage($page): string {
+
         $page = (int)$page;
         $blogpostModel = new BlogpostModel();
       
@@ -115,11 +116,10 @@ class BlogpostsController extends AbstractController
             $params = ['errorMessage' => 'Du har inga blogposter än'];
             return $this->render('views/blogposts.php', $params);
         }
+
         $allBlogposts = $blogpostModel->getAllByUser($this->user->getId());
+
         $path = $this->request->getPath();
-       
-        
-       
         $path = $this->pathProcessing($path);
         $nextPage = $path . '/' . ($page+1);
         $previusPage = $path . '/' . ($page-1);
@@ -133,22 +133,20 @@ class BlogpostsController extends AbstractController
             'nextPage' => $nextPage,
             'previusPage' => $previusPage,
             'path' => substr($path,0,strlen($path)-1),
-
         ];
 
         return $this->render('views/blogposts.php', $properties);
     }
-    public function getByUser(): string {
-       
+
+    public function getByUser(): string 
+    {   
         return $this->getByUserWithPage(1);   
     }
 
-    public function insertBlogPostToDb() {
-   
+    public function insertBlogPostToDb() 
+    {
         $params = $this->request->getParams();
 
-       
-     
         if (!$params->has('post_name')) {
             $params = ['errorMessage' => 'Du måste ge dit inlägg en titel'];
             return $this->render('views/createBlogpostPage.php', $params);
@@ -160,8 +158,6 @@ class BlogpostsController extends AbstractController
             return $this->render('views/createBlogpostPage.php', $params);
         }
 
-      
-       
         $postName = $params->getString('post_name');
         $content = $params->getString('content');
         $tags = $this->tagProcessing($params->getString('tagname'));
@@ -170,12 +166,11 @@ class BlogpostsController extends AbstractController
      
         $blogpostModel->insertBlogPostToDb($this->user->getId(), $postName, $content, $tags);
 
-     
         header("Location: /start/logedin/my-blogposts");
     }
 
-    public function tagProcessing(string $tags):array {
-
+    public function tagProcessing(string $tags):array 
+    {
         $tags = explode(" ", trim($tags));
         $tags = array_unique($tags);
         
@@ -195,22 +190,29 @@ class BlogpostsController extends AbstractController
         $params = $this->request->getParams();
 
         if (!$params->has('post_name')) {
+
             $params = ['errorMessage' => 'Du får ändra title, men du kan inte ta bort titeln helt'];
             return $this->render('views/createBlogpostPage.php', $params);
+
         } else if (!$params->has('tagname')) {
+
             $params = ['errorMessage' => 'Du får ändra och lägga till taggar, men du måste ha minst en tag'];
             return $this->render('views/createBlogpostPage.php', $params);
+
         } else if (!$params->has('content')) {
+
             $params = ['errorMessage' => 'Du får ändra innehållet, men du kan inte ta bort allt innehåll, önskar du ta bort inlägget var god och använd tabort knappen istället'];
             return $this->render('views/createBlogpostPage.php', $params);
         }
+
         $blogpostId = $params->getInt('blogpost_id');
         $postName = $params->getString('post_name');
         $content = $params->getString('content');
         $tags = $this->tagProcessing($params->getString('tagname'));
+
         $blogpostModel = new BlogpostModel();
-        
         $blogpostModel->editBlogpost($blogpostId, $postName, $tags, $content);
+
         header("Location: /start/blogpost/" . $blogpostId);
 
     }
@@ -221,7 +223,6 @@ class BlogpostsController extends AbstractController
         $blogpostId = $params->getInt('blogpost_id');
       
         $blogpostModel = new BlogpostModel();
-      
         $blogpost = $blogpostModel->getBlogpost($blogpostId);
          
         $properties =[
@@ -232,23 +233,28 @@ class BlogpostsController extends AbstractController
         return $this->render('views/blogpostEditPage.php', $properties);
     }
 
-    public function search($page) {
-       
+    public function search($page) 
+    {   
         $page = (int) $page;
 
         $params = $this->request->getParams();
     
         if(!$params->has('search') && isset($_COOKIE['search'])) {
+
             $search = $_COOKIE['search'];
             $searchType = (int) $_COOKIE['search_type'];
           
         } else if($params->getString('search') === "") {
+
             $params = ['errorMessage' => 'skriv in den taggen du vill söka efter'];
+
             setcookie("search_type", null, time() -3600);
             setcookie("search", null, time() -3600);
+
             return $this->render('views/blogposts.php', $params);
           
         } else {
+
             $search = $params->getString('search');
             $searchType = null;
         }
@@ -256,37 +262,53 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
 
         if ($params->has('tags') && $params->has('post_name') && $params->has('content') || $searchType === 6) {
+
             $blogposts = $blogpostModel->searchByTagsPostAndContent($search, $page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTagsPostAndContent($search);
             $searchType = 6;
+
         } else if ($params->has('tags') && $params->has('post_name') || $searchType === 5) {
+
             $blogposts = $blogpostModel->searchByTagsAndPost($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTagsAndPost($search);
             $searchType = 5;
+
         } else if($params->has('post_name') && $params->has('content') || $searchType === 4) {
+
             $blogposts = $blogpostModel->searchByPostAndContent($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByPostAndContent($search);
             $searchType = 4;
+
         } else if($params->has('tags') && $params->has('content') || $searchType === 3) {
+
             $blogposts = $blogpostModel->searchByTagsAndContent($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTagsAndContent($search);
             $searchType = 3;
+
         } else if ($params->has('tags') || $searchType === 2) {
+
             $blogposts = $blogpostModel->searchByTags($search, $page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByTags($search);
             $searchType = 2;
+
         } else if($params->has('post_name') || $searchType === 1) {
+            
             $blogposts = $blogpostModel->searchByPost($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByPost($search);
             $searchType = 1;
+
         } else if($params->has('content') || $searchType === 0) {
+            
             $blogposts = $blogpostModel->searchByContent($search,$page, self::PAGE_LENGTH);
             $allBlogposts = $blogpostModel->searchByContent($search);
             $searchType = 0;
+
         } else  {
+            
             $params = ['errorMessage' => 'du måste välja vad du vill söka efter'];
             return $this->render('views/blogposts.php', $params);
         }
+
       
        if (empty($blogposts)) {
         
@@ -304,6 +326,7 @@ class BlogpostsController extends AbstractController
         
 
         if(strpos($path,"search") !== false) {
+
             $path = "/start/blogpost";
         }
       
@@ -319,12 +342,12 @@ class BlogpostsController extends AbstractController
 
         setcookie("search_type", $searchType, time() + 3600);
         setcookie("search", $search, time() + 3600);
+
         return $this->render('views/blogposts.php', $properties);
     }
 
     public function deletePostFromDb() 
     {
-       
         $params = $this->request->getParams();
         $blogpostId = $params->getInt('blogpost_id');
        
@@ -343,7 +366,6 @@ class BlogpostsController extends AbstractController
         $commentId = $params->getInt('comment_id');
         $blogpostId = $params->getInt('blogpost_id');
        
-    
         $blogpostModel = new BlogpostModel();
        
         $blogposts = $blogpostModel->deleteCommentFromDb($commentId);
@@ -353,7 +375,6 @@ class BlogpostsController extends AbstractController
 
     public function commentEditPage():string 
     {   
-        
         $params = $this->request->getParams();
         $commentId = $params->getInt('comment_id');
        
@@ -361,6 +382,7 @@ class BlogpostsController extends AbstractController
         
         $comment = $blogpostModel->getComment($commentId);
         $comment = $comment[0];
+
         $properties =[
             'comment' => $comment,
             'rootPage' => $params->getString('rootPage')
@@ -370,37 +392,37 @@ class BlogpostsController extends AbstractController
         return $this->render('views/commentEditPage.php', $properties);
     }
 
-    public function editCommentInDatabase() {
-        
-        
+    public function editCommentInDatabase() 
+    {    
         $params = $this->request->getParams();
-
         
         if (!$params->has('content')) {
+
             $params = ['errorMessage' => 'Du får ändra innehållet, men du kan inte ta bort allt innehåll, önskar du ta bort kommentaren var god och använd tabort knappen istället'];
             return $this->render('views/commentEditPage.php', $params);
         }
+
         $commentId = $params->getInt('comment_id');
         $content = $params->getString('content');
         $blogpostId = $params->getInt('blogpost_id');
+
         $blogpostModel = new BlogpostModel();
-        
         $blogpostModel->editComment($commentId, $content);
 
         header("Location: /start/blogpost/$blogpostId");
 
     }
 
-    public function insertCommentToDb() {
-        
+    public function insertCommentToDb() 
+    {
         $params = $this->request->getParams();
         
-       
         if (!$params->has('content')) {
+
             $params = ['errorMessage' => 'Ditt inlägg måste ha innehåll för att kunna skapas'];
             return $this->render('views/createCommentPage.php', $params);
+            
         }
-
         
         $content = $params->getString('content');
         $blogpostId = $params->getInt('blogpost_id');

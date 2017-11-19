@@ -12,7 +12,8 @@ class User implements JsonSerializable
     protected $email;
     
 
-    public function __construct($type, $id, $firstname, $surname, $username, $email) {
+    public function __construct($type, $id, $firstname, $surname, $username, $email) 
+    {
         $this->type = $type;
         $this->id = $id;
         $this->firstname = $firstname;
@@ -26,27 +27,33 @@ class User implements JsonSerializable
         return get_object_vars($this);
     }
     
-    public function getType() {
+    public function getType() 
+    {
         return $this->type;
     }
 
-    public function getId() {
+    public function getId() 
+    {
         return $this->id;
     }
 
-    public function getFirstname() {
+    public function getFirstname() 
+    {
         return $this->firstname;
     }
 
-    public function getSurname() {
+    public function getSurname() 
+    {
         return $this->surename;
     }
    
-    public function getUsername() {
+    public function getUsername() 
+    {
         return $this->username;
     }
 
-    public function getEmail() {
+    public function getEmail() 
+    {
         return $this->email;
     }
 }

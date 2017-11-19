@@ -1,5 +1,4 @@
 <section>
-<?php //var_dump($previousPage);  ?>
     <?php if(isset($rootPage)) { 
         echo
         "<form action=$rootPage method='post'>

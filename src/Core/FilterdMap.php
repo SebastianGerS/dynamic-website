@@ -5,6 +5,7 @@ namespace Blog\Core;
 class FilterdMap 
 {
     private $map;
+
     public function __construct(array $baseMap)
     {
         $this->map = $baseMap;
@@ -33,6 +34,7 @@ class FilterdMap
     public function getString(string $name, $filter = true) 
     {   
         $value = (string) $this->get($name);
+        
         return $filter ? addslashes($value) : $value;
     }
 

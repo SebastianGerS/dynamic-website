@@ -2,6 +2,7 @@
 
 namespace Blog\Core;
 use Blog\Core\FilterdMap;
+
 class Request {
 
     const GET = 'GET';
@@ -22,38 +23,44 @@ class Request {
         $this->cookies = new FilterdMap($_COOKIE);
     }
 
-    public function getUrl(): string {
+    public function getUrl(): string 
+    {
         return $this->domain . $this->path;
     }
 
-    public function getDomain(): string {
+    public function getDomain(): string 
+    {
         return $this->domain;
     }
 
-    public function getPath(): string {
+    public function getPath(): string 
+    {
         return $this->path;
     }
 
-    public function getMethod():string {
+    public function getMethod():string 
+    {
         return $this->method;
     }
 
-    public function getParams(): FilterdMap {
+    public function getParams(): FilterdMap 
+    {
         return $this->params;
     }
 
-    public function getCookies():FilterdMap {
+    public function getCookies():FilterdMap 
+    {
         return $this->cookies;
     }
-    public function isPost(): bool {
+
+    public function isPost(): bool 
+    {
         return $this->method === self::POST;
     }
 
-    public function isGet(): bool {
+    public function isGet(): bool 
+    {
         return $this->method === self::GET;
     }
-
-    
-
 }
 

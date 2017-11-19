@@ -124,7 +124,7 @@
             "id": "number"
         }
     },
-    "blogposts/search/:page": {
+    "start/blogposts/search/:page": {
         "controller": "Blogposts",
         "method": "search",
         "params": {

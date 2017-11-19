@@ -13,9 +13,12 @@
             <div class="row justify-content-center">
                 <article class="col-11">
                     <div class="row">
-                        <p class="card-text mr-5"><?php echo 'Skapad av: ' . $blogpost->getUsername() ?></p>
-                        <p class="card-text mx-5"><?php echo 'Datum: ' . $blogpost->getPostCreationTime() ?></p>
-                        <p class="card-text ml-5"><?php echo 'Tags: ' . $blogpost->getTags()?></p>
+                        <p class="card-text mr-3"><?php echo 'Skapad av: ' . $blogpost->getUsername() ?></p>
+                        <p class="card-text mr-3"><?php echo 'Datum: ' . $blogpost->getPostCreationTime() ?></p>
+                        <?php if ($blogpost->issetPostEditTime() === true): ?>
+                            <p class="card-text mr-3"><?php echo 'Senast editerad: ' . $blogpost->getPostEditTime() ?></p>
+                        <?php endif ?>
+                        <p class="card-text"><?php echo 'Tags: ' . $blogpost->getTags()?></p>
                     </div>
                     <div class="row justify-content-center">
                         <h1 class="card-title py-2"><?php echo $blogpost->getPostName() ?></h1>
@@ -49,7 +52,10 @@
                         <article class="col-12 my-3">
                             <div class="row justify-content-center">
                                 <p class="card-text text-light mr-5"><?php echo 'Kommentar av: ' . $comment->getUsername() ?></p>
-                                <p class="card-text text-light ml-5"><?php echo 'Datum: ' . $comment->getPostCreationTime() ?></p>
+                                <p class="card-text text-light mr-5"><?php echo 'Datum: ' . $comment->getPostCreationTime() ?></p>
+                                <?php if ($comment->issetPostEditTime()): ?>
+                                    <p class="card-text text-light"><?php echo 'Senast editerad: ' . $comment->getPostEditTime()?></p>
+                                <?php endif ?>
                             </div>
                             <div class="row justify-content-center">
                                 <p class="card-text text-light"><?php echo $comment->getContent() ?></p>

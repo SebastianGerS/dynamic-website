@@ -13,7 +13,7 @@ class Config extends Singelton
     {
         $json =file_get_contents(__DIR__ . '/../../config/dbinfo.json');
         $this->data = json_decode($json, true);
-    }
+    } // when a new instance of this function is caled the content of dbinfo.json is turnd into a string and stored in the data varible 
 
     public function get($key) 
     {
@@ -23,6 +23,6 @@ class Config extends Singelton
         }
         
         return $this->data[$key];
-    }
+    } // this function returns the value of a given key if that key exists in the data varible
 }
 ?>

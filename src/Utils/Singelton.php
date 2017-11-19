@@ -16,7 +16,9 @@ abstract class Singelton
         }
         
         return self::$instances[$class];
-    }
+    } // makes this function looks in the instances array to check if the class thats been caled is in that array
+    // if not it creates a new instance of that class and stores it the array if it's alredy in the array it just 
+    //returns the instances of that class stored in the array
 
 }
 ?>

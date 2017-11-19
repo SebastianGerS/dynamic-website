@@ -5,9 +5,14 @@
         "<form action=$rootPage method='post'>
             <button  class='btn btn-success my-2' > Tillbaka</button>
         </form>";
-    }else if (isset($back)){
+    }else if (isset($back) && preg_match("~(edit|create)~",$back) === 0){
         echo
         "<form action=$back method='post'>
+            <button  class='btn btn-success my-2' > Tillbaka</button>
+        </form>";
+    } else if (isset($user)){
+        echo
+        "<form action='/start/logedin/blogposts' method='post'>
             <button  class='btn btn-success my-2' > Tillbaka</button>
         </form>";
     } else {

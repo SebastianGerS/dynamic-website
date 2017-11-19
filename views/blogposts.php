@@ -7,12 +7,11 @@
         <?php endif ?>
         <?php if($morePages): ?>
             <form class ="col-1 offset-10<?php if($page ==1) {echo ' offset-11';}?>" action="<?php echo $nextPage ?>" method="get">
-                <button class="btn btn-success my-3" name="same_search" value ="true"> Nästa sida</button>
+                <button class="btn btn-success my-3"> Nästa sida</button>
             </form>
         <?php endif ?>
     </div>
     <?php  foreach($blogposts as $blogpost): ?>
-    <?php //var_dump($blogposts); die; ?>
         <div class="col-12 card my-1">
             <div class="card-body">
                 <div class="row col-12">

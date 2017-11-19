@@ -77,21 +77,30 @@ class BlogpostsController extends AbstractController
 
     public function getBlogpost($id):string
     {   
+        $params = $this->request->getParams();
+
         $blogpostModel = new BlogpostModel();
         
         $blogpost = $blogpostModel->getBlogpost($id);
 
         if (empty($blogpost)) {
-            $params = ['errorMessage' => 'inlägged du letar efter finns inte'];
-            return $this->render('views/error.php', $params);
+            $properties = ['errorMessage' => 'inlägged du letar efter finns inte'];
+            return $this->render('views/error.php', $properties);
         }
 
         $comments = $blogpostModel->getComments($id);
-       
+        
+
         $properties = [
             'blogpost' => $blogpost,
             'comments' => $comments
         ];
+        if ($params->has('rootPage')) {
+            $properties['rootPage'] = $params->getString('rootPage');
+           
+        }
+
+        $properties['previousPage'] = $previusPage;
 
         return $this->render('views/blogpost.php', $properties);
     }
@@ -214,12 +223,10 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
       
         $blogpost = $blogpostModel->getBlogpost($blogpostId);
-
-        
-        $blogpost->setTags(preg_replace('~,~',' ',$blogpost->getTags()));
          
         $properties =[
-            'blogpost' => $blogpost
+            'blogpost' => $blogpost,
+            'rootPage' => $params->getString('rootPage')
         ];
         
         return $this->render('views/blogpostEditPage.php', $properties);
@@ -282,6 +289,7 @@ class BlogpostsController extends AbstractController
         }
       
        if (empty($blogposts)) {
+        
         $params = ['errorMessage' => 'inga sökningar med angivna parametrar hittades'];
         setcookie("search_type", null, time() -3600);
         setcookie("search", null, time() -3600);
@@ -289,13 +297,9 @@ class BlogpostsController extends AbstractController
        }
 
         $path = $this->request->getPath();
-       
         $path = $this->pathProcessing($path);
-
         $nextPage = $path . '/' . ($page+1);
-
         $previusPage = $path . '/' . ($page-1);
-     
         $morePages = $this->morePages($blogposts, $allBlogposts, $page, self::PAGE_LENGTH);
         
 
@@ -358,7 +362,8 @@ class BlogpostsController extends AbstractController
         $comment = $blogpostModel->getComment($commentId);
         $comment = $comment[0];
         $properties =[
-            'comment' => $comment
+            'comment' => $comment,
+            'rootPage' => $params->getString('rootPage')
 
         ];
        
@@ -403,7 +408,7 @@ class BlogpostsController extends AbstractController
         $blogpostModel = new BlogpostModel();
     
         $blogpostModel->insertCommentToDb($this->user->getId(), $blogpostId, $content);
-        
+
         header("Location: /start/blogpost/$blogpostId");
     }
 

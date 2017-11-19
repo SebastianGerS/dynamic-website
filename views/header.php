@@ -1,7 +1,7 @@
 <nav class="navbar navbar-dark bg-primary col-12">
     <div class ="row col-12 align-items-start justify-content-center mx-0">
         <div class"col mx-4">
-            <form class ="row col-12 align-items-start justify-content-center my-3 pt-2" action="/blogposts/search/1" method="get">
+            <form class ="row col-12 align-items-start justify-content-center my-3 pt-2" action="/start/blogposts/search/1" method="get">
                 <div class="input-group">
                     <input class="form-control" id="searchfield" type=text placeholder="type your search"  name="search">
                     <button class="btn btn-primary bg-success mr-2" type="submit"> Sök!</button>

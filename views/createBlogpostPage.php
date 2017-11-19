@@ -1,3 +1,6 @@
+<form action="<?php echo $back?>" method="post">
+    <button  class="btn btn-warning my-2" > Tillbaka</button>
+</form>
 <div class="form-group  py-3">
     <article id="create-blogpost-form"> 
         <form action="/postToDatabase" method="post">

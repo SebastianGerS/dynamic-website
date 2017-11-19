@@ -1,4 +1,7 @@
 
+ <form action="/start/blogposts" method="post">
+    <button  class="btn btn-warning my-2" > Tillbaka</button>
+</form>
 <div class="form-group py-3">
     <article id="create-user-form"> 
         <form action="/createUser" method="post">

@@ -96,8 +96,6 @@ class Router
         foreach ($routeParts as $key => $routePart) {
 
             if (strpos($routePart, ':') === 0) {
-                var_dump($pathParts);
-                die;
                 $name = substr($routePart, 1);
                 $params[$name] = $pathParts[$key+1];
             } // if the first character in a routpart is : name gets stores the value from routepart except the : (in our case page or id)

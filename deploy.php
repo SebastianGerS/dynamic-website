@@ -7,7 +7,7 @@ require 'recipe/common.php';
 set('application', 'blog');
 
 // Project repository
-set('repository', 'https://github.com/chas-academy/05-dynamisk-webbplats-php-SebastianGerS.git');
+set('repository', 'git@github.com:chas-academy/05-dynamisk-webbplats-php-SebastianGerS.git');
 
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', true); 
@@ -23,7 +23,7 @@ set('writable_dirs', []);
 // Hosts
 
 host('ssh.binero.se')
-    ->set('deploy_path', '~/sebastiangerstelsollerman.chas.academy')
+    ->set('deploy_path', '~/blog.sebastiangerstelsollerman.chas.academy')
     ->user('226728_sgs')
     ->port(22);    
     

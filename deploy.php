@@ -32,7 +32,7 @@ host('ssh.binero.se')
 
 desc('Deploy your project');
 task('deploy:custom_webroot', function() {
-    run("cd {{deploy_path}} && ln -sfn {{release_path}} public_html/05-dynamisk-webbplats-php-SebastianGerS");
+    run("cd {{deploy_path}} && ln -sfn {{release_path}} public_html");
 });
 task('deploy', [
     'deploy:info',

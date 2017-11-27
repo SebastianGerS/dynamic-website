@@ -10,7 +10,7 @@ set('application', 'blog');
 set('repository', 'git@github.com:chas-academy/05-dynamisk-webbplats-php-SebastianGerS.git');
 
 // [Optional] Allocate tty for git clone. Default value is false.
-set('git_tty', true);
+set('git_tty', false);
 set('ssh_multiplexing', false);
 
 // Shared files/dirs between deploys 

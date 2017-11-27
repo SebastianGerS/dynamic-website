@@ -11,7 +11,6 @@ set('repository', 'git@github.com:chas-academy/05-dynamisk-webbplats-php-Sebasti
 
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', false);
-set('ssh_multiplexing', false);
 
 // Shared files/dirs between deploys 
 set('shared_files', ['config/dbinfo.json']);

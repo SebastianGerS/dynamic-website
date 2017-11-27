@@ -43,3 +43,7 @@ thumbs.db
 .vagrant
 Vagrantfile
 provisioner.sh
+
+# Composer #
+############
+vendor

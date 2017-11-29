@@ -32,7 +32,9 @@ host('ssh.binero.se')
 // Tasks
 
 desc('Deploy your project');
-
+task('deploy:custom_webroot', function() {
+    run("cd {{deploy_path}} && ls -sfn {{release_path}} public_html/web")
+})
 task('deploy', [
     'deploy:info',
     'deploy:prepare',
@@ -50,6 +52,7 @@ task('deploy', [
 
 // [Optional] If deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
+after('deploy', 'deploy:custom_webroot');
 
 
 
